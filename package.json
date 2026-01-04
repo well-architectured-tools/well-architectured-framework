@@ -11,7 +11,7 @@
     "build": "tsc -p tsconfig.build.json",
     "start": "node --inspect dist/server/index.js",
     "infra:up": "docker compose -f infra/compose.yaml up -d",
-    "infra:down": "docker compose -f infra/compose.yaml down"
+    "infra:down-with-volumes": "docker compose -f infra/compose.yaml down -v"
   },
   "devDependencies": {
     "@tsconfig/node-ts": "^23.6.2",
