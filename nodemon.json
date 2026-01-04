@@ -2,7 +2,7 @@
   "verbose": true,
   "watch": ["src", ".env", ".env.example"],
   "ext": "ts",
-  "ignore": ["*.test.ts", "*.uc-test.ts", "*.infra-test.ts", "*.e2e-test.ts"],
+  "ignore": ["*.test.mts", "*.uc-test.mts", "*.infra-test.mts", "*.e2e-test.mts"],
   "exec": "npm run clear && npm run build && npm run start",
   "events": {
     "start": "clear"

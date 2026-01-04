@@ -9,7 +9,7 @@
     "develop": "nodemon",
     "clear": "rm -rf ./dist",
     "build": "tsc -p tsconfig.build.json",
-    "start": "node --inspect dist/server/index.js",
+    "start": "node --inspect dist/server/index.mjs",
     "format:check": "prettier ./src --check",
     "format:write": "prettier ./src --write",
     "infra:up": "docker compose -f infra/compose.yaml up -d",
