@@ -4,8 +4,8 @@ import type { CreatePostParams } from './create-post.params.mjs';
 export class CreatePostHandler implements CommandHandler<CreatePostParams> {
   async execute(params: CreatePostParams): Promise<void> {
     try {
-      console.log(params);
-    } catch (error) {
+      await Promise.resolve(params);
+    } catch {
       // UseCaseErrorHandler.wrapErrorsToApplicationErrors(error);
     }
   }

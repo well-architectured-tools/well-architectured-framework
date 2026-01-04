@@ -7,11 +7,16 @@
   "prettier": "@well-architectured-tools/prettier-config",
   "scripts": {
     "develop": "nodemon",
+    "predevelop": "npm run infra:up",
+    "postdevelop": "npm run infra:down",
     "clear": "rm -rf ./dist",
     "build": "tsc -p tsconfig.build.json",
     "start": "node --inspect dist/server/index.mjs",
     "format:check": "prettier ./src --check",
     "format:write": "prettier ./src --write",
+    "lint:check": "eslint ./src",
+    "lint:write": "eslint ./src --fix",
+    "lint:inspect-config": "eslint --inspect-config",
     "infra:up": "docker compose -f infra/compose.yaml up -d",
     "infra:down": "docker compose -f infra/compose.yaml down"
   },
@@ -19,14 +24,22 @@
     "fastify": "^5.6.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@tsconfig/node-ts": "^23.6.2",
     "@tsconfig/node24": "^24.0.3",
     "@tsconfig/strictest": "^2.0.8",
     "@types/node": "^25.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.51.0",
+    "@typescript-eslint/parser": "^8.51.0",
     "@well-architectured-tools/prettier-config": "^1.0.1",
+    "eslint": "^9.39.2",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-boundaries": "^5.3.1",
+    "eslint-plugin-unicorn": "^62.0.0",
     "nodemon": "^3.1.11",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.51.0",
     "vitest": "^4.0.16"
   }
 }
