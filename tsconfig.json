@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "@tsconfig/node24/tsconfig",
+    "@tsconfig/node-ts/tsconfig.json",
+    "@tsconfig/strictest/tsconfig"
+  ],
+  "compilerOptions": {
+    "sourceMap": true,
+    "incremental": true,
+    "noEmitOnError": true,
+    "noUncheckedSideEffectImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleDetection": "force"
+  }
+}
