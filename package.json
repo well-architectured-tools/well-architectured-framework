@@ -10,12 +10,10 @@
     "clear": "rm -rf ./dist",
     "build": "tsc -p tsconfig.build.json",
     "start": "node --inspect dist/server/index.js",
-    "start-without-compilation": "node src/index.ts",
     "format:check": "prettier ./src --check",
     "format:write": "prettier ./src --write",
     "infra:up": "docker compose -f infra/compose.yaml up -d",
-    "infra:down": "docker compose -f infra/compose.yaml down",
-    "infra:down-with-volumes": "docker compose -f infra/compose.yaml down -v"
+    "infra:down": "docker compose -f infra/compose.yaml down"
   },
   "dependencies": {
     "fastify": "^5.6.2"
