@@ -1,5 +1,5 @@
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
-import type { Transport } from '../../libs/kernel/index.js';
+import type { Transport } from '../../libs/kernel/index.mjs';
 
 export class FastifyTransport implements Transport {
   start(): Promise<void> | void {
