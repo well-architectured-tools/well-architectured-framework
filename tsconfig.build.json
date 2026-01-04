@@ -1,8 +1,16 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist/server",
+    "rootDir": "src",
+    "outDir": "dist/server"
   },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.test.mts", "**/*.uc-test.mts", "**/*.infra-test.mts", "**/*.e2e-test.mts"]
+  "include": [
+    "src/**/*.mts"
+  ],
+  "exclude": [
+    "src/**/*.test.mts",
+    "src/**/*.uc-test.mts",
+    "src/**/*.infra-test.mts",
+    "src/**/*.e2e-test.mts"
+  ]
 }

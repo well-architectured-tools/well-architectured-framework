@@ -1,7 +1,7 @@
 {
   "verbose": true,
   "watch": ["src", ".env", ".env.example"],
-  "ext": "ts",
+  "ext": "mts",
   "ignore": ["*.test.mts", "*.uc-test.mts", "*.infra-test.mts", "*.e2e-test.mts"],
   "exec": "npm run clear && npm run build && npm run start",
   "events": {
