@@ -10,6 +10,11 @@
     "noEmitOnError": true,
     "noUncheckedSideEffectImports": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleDetection": "force"
+    "moduleDetection": "force",
+    "plugins": [
+      {
+        "transform": "typia/lib/transform"
+      }
+    ]
   }
 }
