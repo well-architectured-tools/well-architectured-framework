@@ -17,6 +17,7 @@
     "lint:check": "eslint ./src",
     "lint:write": "eslint ./src --fix",
     "lint:inspect-config": "eslint --inspect-config",
+    "unit-tests": "vitest --config ./vitest.config.ts --project unit-tests",
     "infra:up": "docker compose -f infra/compose.yaml up -d",
     "infra:down": "docker compose -f infra/compose.yaml down",
     "prepare": "ts-patch install"
