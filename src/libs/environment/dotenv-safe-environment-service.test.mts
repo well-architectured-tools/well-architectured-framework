@@ -1,11 +1,11 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { EnvironmentService } from './environment-service.mjs';
+import { DotenvSafeEnvironmentService } from './dotenv-safe-environment-service.mjs';
 
-describe('EnvironmentService', (): void => {
-  let service: EnvironmentService;
+describe('DotenvSafeEnvironmentService', (): void => {
+  let service: DotenvSafeEnvironmentService;
 
   beforeAll((): void => {
-    service = new EnvironmentService();
+    service = new DotenvSafeEnvironmentService();
   });
 
   it('should return value', (): void => {
