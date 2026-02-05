@@ -20,6 +20,7 @@
     "unit-tests": "vitest --config ./vitest.config.ts --project unit-tests",
     "infra:up": "docker compose -f infra/compose.yaml up -d",
     "infra:down": "docker compose -f infra/compose.yaml down",
+    "drizzle:generate": "npx drizzle-kit generate --config=src/data/postgres-drizzle/drizzle.config.mts",
     "prepare": "ts-patch install"
   },
   "dependencies": {

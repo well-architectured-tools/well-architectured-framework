@@ -9,15 +9,13 @@ import typescriptEslintPlugin from "@typescript-eslint/eslint-plugin";
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 
 export default defineConfig(
-  { ignores: ["dist"] },
+  { ignores: ['dist'] },
   {
-    files: ["eslint.config.mjs"],
-    extends: [
-      eslint.configs.recommended,
-    ],
+    files: ['eslint.config.mjs'],
+    extends: [eslint.configs.recommended],
   },
   {
-    files: ["src/**/*.{ts,mts}"],
+    files: ['src/**/*.{ts,mts}'],
     languageOptions: {
       parserOptions: {
         projectService: true,
@@ -90,21 +88,33 @@ export default defineConfig(
     },
   },
   {
-    files: ["src/**/*.{ts,mts}"],
+    files: ['src/**/*.{ts,mts}'],
     languageOptions: {
       parser: typescriptParser,
     },
     plugins: {
-      "@typescript-eslint": typescriptEslintPlugin,
+      '@typescript-eslint': typescriptEslintPlugin,
       boundaries,
     },
     settings: {
-      "import/resolver": {
+      'import/resolver': {
         typescript: {
           alwaysTryTypes: true,
         },
       },
       'boundaries/elements': [
+        {
+          type: 'data-index',
+          pattern: 'src/data/*/index.{ts,mts}',
+          mode: 'full',
+          capture: ['dataName'],
+        },
+        {
+          type: 'data',
+          pattern: 'src/data/*/**/*.{ts,mts}',
+          mode: 'full',
+          capture: ['dataName'],
+        },
         {
           type: 'lib-index',
           pattern: 'src/libs/*/index.{ts,mts}',
@@ -156,32 +166,24 @@ export default defineConfig(
           default: 'disallow',
           rules: [
             {
+              from: ['data'],
+              allow: [['data', { dataName: '${from.dataName}' }]],
+            },
+            {
               from: ['lib'],
-              allow: [
-                ['lib', { libName: '${from.libName}' }],
-              ],
+              allow: [['lib', { libName: '${from.libName}' }]],
             },
             {
               from: ['module'],
-              allow: [
-                ['module', { moduleName: '${from.moduleName}' }],
-                ['lib-index'],
-              ],
+              allow: [['module', { moduleName: '${from.moduleName}' }], ['lib-index']],
             },
             {
               from: ['transport'],
-              allow: [
-                ['transport', { transportName: '${from.transportName}' }],
-                ['lib-index'],
-                ['module-index'],
-              ],
+              allow: [['transport', { transportName: '${from.transportName}' }], ['lib-index'], ['module-index']],
             },
             {
               from: ['index'],
-              allow: [
-                ['lib-index'],
-                ['transport-index'],
-              ],
+              allow: [['lib-index'], ['transport-index']],
             },
           ],
         },
@@ -189,12 +191,18 @@ export default defineConfig(
     },
   },
   {
-    files: ["src/**/*.{ts,mts}"],
-    extends: [
-      eslintPluginUnicorn.configs.recommended
-    ],
+    files: ['src/**/*.{ts,mts}'],
+    extends: [eslintPluginUnicorn.configs.recommended],
     rules: {
       'unicorn/prevent-abbreviations': 'off',
+      'unicorn/no-null': 'off',
+    },
+  },
+  {
+    files: ['src/data/**/*.{ts,mts}'],
+    rules: {
+      '@typescript-eslint/typedef': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
   {
@@ -202,8 +210,8 @@ export default defineConfig(
       'src/**/*.test.{ts,mts}',
       'src/**/*.uc-test.{ts,mts}',
       'src/**/*.infra-test.{ts,mts}',
-      'src/**/*.e2e-test.{ts,mts}'
+      'src/**/*.e2e-test.{ts,mts}',
     ],
-    rules: {}
+    rules: {},
   },
 );
