@@ -3,9 +3,9 @@
 import eslint from '@eslint/js';
 import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
-import boundaries from "eslint-plugin-boundaries";
-import typescriptParser from "@typescript-eslint/parser";
-import typescriptEslintPlugin from "@typescript-eslint/eslint-plugin";
+import boundaries from 'eslint-plugin-boundaries';
+import typescriptParser from '@typescript-eslint/parser';
+import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 
 export default defineConfig(
@@ -167,11 +167,11 @@ export default defineConfig(
           rules: [
             {
               from: ['data'],
-              allow: [['data', { dataName: '${from.dataName}' }]],
+              allow: [['data', { dataName: '${from.dataName}' }], ['lib-index']],
             },
             {
               from: ['lib'],
-              allow: [['lib', { libName: '${from.libName}' }]],
+              allow: [['lib', { libName: '${from.libName}' }], ['lib-index']],
             },
             {
               from: ['module'],
