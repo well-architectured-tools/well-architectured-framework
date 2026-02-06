@@ -1,4 +1,5 @@
 export interface EnvironmentVariables {
+  readonly LOG_LEVEL: 'info' | 'warn' | 'error';
   readonly POSTGRES_URL: string;
 }
 

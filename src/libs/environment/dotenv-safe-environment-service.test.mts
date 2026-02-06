@@ -9,7 +9,7 @@ describe('DotenvSafeEnvironmentService', (): void => {
   });
 
   it('should return value', (): void => {
-    const variable: string = service.get('POSTGRES_URL');
+    const variable: string = service.get('LOG_LEVEL');
     expect(variable).toBeDefined();
   });
 });
