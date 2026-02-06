@@ -9,7 +9,7 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
     config();
 
     this.env = {
-      POSTGRES_URL: process.env['POSTGRES_URL'] as string,
+      DATABASE_URL: process.env['DATABASE_URL'] as string,
     };
   }
 
