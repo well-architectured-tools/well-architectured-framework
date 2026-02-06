@@ -20,13 +20,11 @@
     "unit-tests": "vitest --config ./vitest.config.ts --project unit-tests",
     "infra:up": "docker compose -f infra/compose.yaml up -d",
     "infra:down": "docker compose -f infra/compose.yaml down",
-    "drizzle:generate": "npx drizzle-kit generate --config=src/data/postgres-drizzle/drizzle.config.mts",
     "prepare": "ts-patch install"
   },
   "dependencies": {
     "@novadi/core": "^0.6.0",
     "dotenv-safe": "^9.1.0",
-    "drizzle-orm": "^0.45.1",
     "fastify": "^5.7.4",
     "pg": "^8.18.0",
     "typia": "^11.0.3"
@@ -42,7 +40,6 @@
     "@typescript-eslint/eslint-plugin": "^8.51.0",
     "@typescript-eslint/parser": "^8.51.0",
     "@well-architectured-tools/prettier-config": "^1.0.1",
-    "drizzle-kit": "^0.31.8",
     "eslint": "^9.39.2",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-boundaries": "^5.3.1",
