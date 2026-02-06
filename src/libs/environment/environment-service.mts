@@ -1,5 +1,5 @@
 export interface EnvironmentVariables {
-  readonly DATABASE_URL: string;
+  readonly POSTGRES_URL: string;
 }
 
 export interface EnvironmentService<K extends keyof EnvironmentVariables = keyof EnvironmentVariables> {

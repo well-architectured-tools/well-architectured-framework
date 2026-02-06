@@ -20,6 +20,9 @@
     "unit-tests": "vitest --config ./vitest.config.ts --project unit-tests",
     "infra:up": "docker compose -f infra/compose.yaml up -d",
     "infra:down": "docker compose -f infra/compose.yaml down",
+    "migrations:create": "node-pg-migrate create --config-file=migrations/postgres/config.json migration",
+    "migrations:up-all": "node-pg-migrate up --config-file=migrations/postgres/config.json",
+    "migrations:down-one": "node-pg-migrate down --config-file=migrations/postgres/config.json",
     "prepare": "ts-patch install"
   },
   "dependencies": {
@@ -44,6 +47,7 @@
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-boundaries": "^5.3.1",
     "eslint-plugin-unicorn": "^62.0.0",
+    "node-pg-migrate": "^8.0.4",
     "nodemon": "^3.1.11",
     "prettier": "^3.7.4",
     "ts-patch": "^3.3.0",

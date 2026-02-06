@@ -104,18 +104,6 @@ export default defineConfig(
       },
       'boundaries/elements': [
         {
-          type: 'data-index',
-          pattern: 'src/data/*/index.{ts,mts}',
-          mode: 'full',
-          capture: ['dataName'],
-        },
-        {
-          type: 'data',
-          pattern: 'src/data/*/**/*.{ts,mts}',
-          mode: 'full',
-          capture: ['dataName'],
-        },
-        {
           type: 'lib-index',
           pattern: 'src/libs/*/index.{ts,mts}',
           mode: 'full',
@@ -166,10 +154,6 @@ export default defineConfig(
           default: 'disallow',
           rules: [
             {
-              from: ['data'],
-              allow: [['data', { dataName: '${from.dataName}' }], ['lib-index']],
-            },
-            {
               from: ['lib'],
               allow: [['lib', { libName: '${from.libName}' }], ['lib-index']],
             },
@@ -196,13 +180,7 @@ export default defineConfig(
     rules: {
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/no-null': 'off',
-    },
-  },
-  {
-    files: ['src/data/**/*.{ts,mts}'],
-    rules: {
-      '@typescript-eslint/typedef': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
+      'unicorn/prefer-ternary': 'off',
     },
   },
   {

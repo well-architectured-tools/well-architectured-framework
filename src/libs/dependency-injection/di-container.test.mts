@@ -5,7 +5,7 @@ import type { EnvironmentService } from '../environment/index.mjs';
 describe('diContainer: DiContainer', (): void => {
   it('should resolve value', (): void => {
     const environmentService: EnvironmentService = diContainer.resolveType('EnvironmentService');
-    const variable: string = environmentService.get('DATABASE_URL');
+    const variable: string = environmentService.get('POSTGRES_URL');
     expect(variable).toBeDefined();
   });
 });
