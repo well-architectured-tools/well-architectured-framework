@@ -5,12 +5,12 @@
     "outDir": "dist/server"
   },
   "include": [
-    "src/**/*.mts"
+    "src/**/*.ts"
   ],
   "exclude": [
-    "src/**/*.test.mts",
-    "src/**/*.uc-test.mts",
-    "src/**/*.infra-test.mts",
-    "src/**/*.e2e-test.mts"
+    "src/**/*.test.ts",
+    "src/**/*.uc-test.ts",
+    "src/**/*.infra-test.ts",
+    "src/**/*.e2e-test.ts"
   ]
 }

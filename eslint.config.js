@@ -11,11 +11,11 @@ import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 export default defineConfig(
   { ignores: ['dist'] },
   {
-    files: ['eslint.config.mjs'],
+    files: ['eslint.config.js'],
     extends: [eslint.configs.recommended],
   },
   {
-    files: ['src/**/*.{ts,mts}'],
+    files: ['src/**/*.ts'],
     languageOptions: {
       parserOptions: {
         projectService: true,
@@ -88,7 +88,7 @@ export default defineConfig(
     },
   },
   {
-    files: ['src/**/*.{ts,mts}'],
+    files: ['src/**/*.ts'],
     languageOptions: {
       parser: typescriptParser,
     },
@@ -105,43 +105,43 @@ export default defineConfig(
       'boundaries/elements': [
         {
           type: 'lib-index',
-          pattern: 'src/libs/*/index.{ts,mts}',
+          pattern: 'src/libs/*/index.ts',
           mode: 'full',
           capture: ['libName'],
         },
         {
           type: 'lib',
-          pattern: 'src/libs/*/**/*.{ts,mts}',
+          pattern: 'src/libs/*/**/*.ts',
           mode: 'full',
           capture: ['libName'],
         },
         {
           type: 'module-index',
-          pattern: 'src/modules/*/index.{ts,mts}',
+          pattern: 'src/modules/*/index.ts',
           mode: 'full',
           capture: ['moduleName'],
         },
         {
           type: 'module',
-          pattern: 'src/modules/*/**/*.{ts,mts}',
+          pattern: 'src/modules/*/**/*.ts',
           mode: 'full',
           capture: ['moduleName'],
         },
         {
           type: 'transport-index',
-          pattern: 'src/transports/*/index.{ts,mts}',
+          pattern: 'src/transports/*/index.ts',
           mode: 'full',
           capture: ['transportName'],
         },
         {
           type: 'transport',
-          pattern: 'src/transports/*/**/*.{ts,mts}',
+          pattern: 'src/transports/*/**/*.ts',
           mode: 'full',
           capture: ['transportName'],
         },
         {
           type: 'index',
-          pattern: 'src/index.{ts,mts}',
+          pattern: 'src/index.ts',
           mode: 'full',
         },
       ],
@@ -175,7 +175,7 @@ export default defineConfig(
     },
   },
   {
-    files: ['src/**/*.{ts,mts}'],
+    files: ['src/**/*.ts'],
     extends: [eslintPluginUnicorn.configs.recommended],
     rules: {
       'unicorn/prevent-abbreviations': 'off',
@@ -185,10 +185,10 @@ export default defineConfig(
   },
   {
     files: [
-      'src/**/*.test.{ts,mts}',
-      'src/**/*.uc-test.{ts,mts}',
-      'src/**/*.infra-test.{ts,mts}',
-      'src/**/*.e2e-test.{ts,mts}',
+      'src/**/*.test.ts',
+      'src/**/*.uc-test.ts',
+      'src/**/*.infra-test.ts',
+      'src/**/*.e2e-test.ts',
     ],
     rules: {},
   },

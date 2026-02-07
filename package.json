@@ -11,7 +11,8 @@
     "postdevelop": "npm run infra:down",
     "clear": "rm -rf ./dist",
     "build": "tsc -p tsconfig.build.json",
-    "start": "node --inspect dist/server/index.mjs",
+    "assets": "cp -r assets/. dist/server/",
+    "start": "node --inspect dist/server/index.js",
     "format:check": "prettier ./src --check",
     "format:write": "prettier ./src --write",
     "lint:check": "eslint ./src",
@@ -20,9 +21,9 @@
     "unit-tests": "vitest --config ./vitest.config.ts --project unit-tests",
     "infra:up": "docker compose -f infra/compose.yaml up -d",
     "infra:down": "docker compose -f infra/compose.yaml down",
-    "migrations:create": "node-pg-migrate create --config-file=migrations/postgres/config.json migration",
-    "migrations:up-all": "node-pg-migrate up --config-file=migrations/postgres/config.json",
-    "migrations:down-one": "node-pg-migrate down --config-file=migrations/postgres/config.json",
+    "migrations:create": "node-pg-migrate --config-file=migrations/postgres/config.json create migration",
+    "migrations:up-all": "node-pg-migrate --config-file=migrations/postgres/config.json up",
+    "migrations:down-one": "node-pg-migrate --config-file=migrations/postgres/config.json down",
     "prepare": "ts-patch install"
   },
   "dependencies": {
