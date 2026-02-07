@@ -27,6 +27,7 @@
     "prepare": "ts-patch install"
   },
   "dependencies": {
+    "@fastify/static": "^9.0.0",
     "@novadi/core": "^0.6.0",
     "dotenv-safe": "^9.1.0",
     "fastify": "^5.7.4",
