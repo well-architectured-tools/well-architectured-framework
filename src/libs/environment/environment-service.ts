@@ -1,8 +1,9 @@
 export interface EnvironmentVariables {
   readonly LOG_LEVEL: 'info' | 'warn' | 'error';
+  readonly PORT: number;
   readonly POSTGRES_URL: string;
 }
 
-export interface EnvironmentService<K extends keyof EnvironmentVariables = keyof EnvironmentVariables> {
-  get(key: K): EnvironmentVariables[K];
+export interface EnvironmentService {
+  get<K extends keyof EnvironmentVariables>(key: K): EnvironmentVariables[K];
 }

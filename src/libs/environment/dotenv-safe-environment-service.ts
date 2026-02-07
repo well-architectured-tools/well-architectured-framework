@@ -12,6 +12,7 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
 
     this.env = {
       LOG_LEVEL: this.getLogLevel(),
+      PORT: this.getPort(),
       POSTGRES_URL: this.getPostgresUrl(),
     };
   }
@@ -27,6 +28,14 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
       throw new Error('Invalid Environment Variable: LOG_LEVEL');
     }
     return logLevel as EnvironmentVariables['LOG_LEVEL'];
+  }
+
+  private getPort(): EnvironmentVariables['PORT'] {
+    const port: number = Number.parseInt(process.env['PORT'] ?? '', 10);
+    if (Number.isNaN(port) || port < 1 || port > 65_535) {
+      throw new Error('Invalid Environment Variable: PORT');
+    }
+    return port;
   }
 
   private getPostgresUrl(): EnvironmentVariables['POSTGRES_URL'] {
