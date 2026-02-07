@@ -8,7 +8,6 @@ export default defineConfig({
     mockReset: true,
     projects: [
       {
-        plugins: [NovadiUnplugin.vite({ enableAutowiring: true })],
         test: {
           name: 'unit-tests',
           include: ['src/**/*.test.ts'],
@@ -20,10 +19,12 @@ export default defineConfig({
         },
       },
       {
+        plugins: [NovadiUnplugin.vite({ enableAutowiring: true })],
         test: {
           name: 'infra-tests',
           include: ['src/libs/**/*.infra-test.ts', 'src/modules/*/infrastructure/**/*.infra-test.ts'],
           environment: 'node',
+          globalSetup: ['./vitest.global.ts'],
           setupFiles: ['./vitest.setup.ts'],
           sequence: {
             concurrent: false,

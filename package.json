@@ -19,6 +19,7 @@
     "lint:write": "eslint ./src --fix",
     "lint:inspect-config": "eslint --inspect-config",
     "unit-tests": "vitest --config ./vitest.config.ts --project unit-tests",
+    "infra-tests": "vitest --config ./vitest.config.ts --project infra-tests",
     "infra:up": "docker compose -f infra/compose.yaml up -d",
     "infra:down": "docker compose -f infra/compose.yaml down",
     "migrations:create": "node-pg-migrate --config-file=migrations/postgres/config.json create migration",
@@ -33,7 +34,8 @@
     "fastify": "^5.7.4",
     "pg": "^8.18.0",
     "pino": "^10.3.0",
-    "typia": "^11.0.3"
+    "typia": "^11.0.3",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",

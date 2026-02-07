@@ -6,7 +6,9 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
   private readonly env: EnvironmentVariables;
 
   constructor() {
-    config();
+    if (process.env['DOTENV_SAFE_LOADED'] !== 'true') {
+      config();
+    }
 
     this.env = {
       LOG_LEVEL: this.getLogLevel(),
