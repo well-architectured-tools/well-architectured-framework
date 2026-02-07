@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { PgPostgresService } from './pg-postgres-service.mjs';
-import { diContainer } from '../dependency-injection/index.mjs';
+import { PgPostgresService } from './pg-postgres-service.js';
+import { diContainer } from '../dependency-injection/index.js';
 
 describe('PgPostgresService', (): void => {
   let service: PgPostgresService;

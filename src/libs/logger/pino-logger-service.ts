@@ -1,7 +1,7 @@
 import pino from 'pino';
-import type { LoggerService } from './logger-service.mjs';
-import { ApplicationError, errorToStringWithCauses } from '../errors/index.mjs';
-import type { EnvironmentService } from '../environment/index.mjs';
+import type { LoggerService } from './logger-service.js';
+import { ApplicationError, errorToStringWithCauses } from '../errors/index.js';
+import type { EnvironmentService } from '../environment/index.js';
 
 export class PinoLoggerService implements LoggerService {
   private logger: pino.Logger;

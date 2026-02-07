@@ -1,7 +1,7 @@
 import { Pool, type QueryResult } from 'pg';
-import type { PostgresQueryResult, PostgresService } from './postgres-service.mjs';
-import type { EnvironmentService } from '../environment/index.mjs';
-import type { LoggerService } from '../logger/index.mjs';
+import type { PostgresQueryResult, PostgresService } from './postgres-service.js';
+import type { EnvironmentService } from '../environment/index.js';
+import type { LoggerService } from '../logger/index.js';
 
 export class PgPostgresService implements PostgresService {
   private readonly loggerService: LoggerService;

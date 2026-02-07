@@ -1,5 +1,5 @@
-import type { Transport, TransportClass } from './libs/kernel/index.mjs';
-import { FastifyTransport } from './transports/fastify/index.mjs';
+import type { Transport, TransportClass } from './libs/kernel/index.js';
+import { FastifyTransport } from './transports/fastify/index.js';
 
 const transports: Set<TransportClass> = new Set<TransportClass>([FastifyTransport]);
 

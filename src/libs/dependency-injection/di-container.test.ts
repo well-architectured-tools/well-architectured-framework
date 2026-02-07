@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { diContainer } from './di-container.mjs';
-import type { EnvironmentService } from '../environment/index.mjs';
+import { diContainer } from './di-container.js';
+import type { EnvironmentService } from '../environment/index.js';
 
 describe('diContainer: DiContainer', (): void => {
   it('should resolve value', (): void => {

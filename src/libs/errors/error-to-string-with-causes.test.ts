@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { errorToStringWithCauses } from './error-to-string-with-causes.mjs';
-import { ApplicationError } from './application-error.mjs';
+import { errorToStringWithCauses } from './error-to-string-with-causes.js';
+import { ApplicationError } from './application-error.js';
 
 describe('errorToStringWithCauses', (): void => {
   it('should return string on Error passed', (): void => {

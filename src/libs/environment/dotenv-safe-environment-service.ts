@@ -1,6 +1,6 @@
 /* eslint-disable no-process-env */
 import { config } from 'dotenv-safe';
-import type { EnvironmentService, EnvironmentVariables } from './environment-service.mjs';
+import type { EnvironmentService, EnvironmentVariables } from './environment-service.js';
 
 export class DotenvSafeEnvironmentService implements EnvironmentService {
   private readonly env: EnvironmentVariables;

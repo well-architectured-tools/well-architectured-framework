@@ -1,4 +1,4 @@
-import { ApplicationError } from './application-error.mjs';
+import { ApplicationError } from './application-error.js';
 
 export function errorToStringWithCauses(error: Error | ApplicationError): string {
   let result: string = '';

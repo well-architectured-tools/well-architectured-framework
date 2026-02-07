@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from 'vitest';
-import { DotenvSafeEnvironmentService } from './dotenv-safe-environment-service.mjs';
+import { DotenvSafeEnvironmentService } from './dotenv-safe-environment-service.js';
 
 describe('DotenvSafeEnvironmentService', (): void => {
   let service: DotenvSafeEnvironmentService;

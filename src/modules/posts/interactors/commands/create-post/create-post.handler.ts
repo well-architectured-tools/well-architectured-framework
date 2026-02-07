@@ -1,5 +1,5 @@
-import type { CommandHandler } from '../../../../../libs/kernel/index.mjs';
-import type { CreatePostParams } from './create-post.params.mjs';
+import type { CommandHandler } from '../../../../../libs/kernel/index.js';
+import type { CreatePostParams } from './create-post.params.js';
 
 export class CreatePostHandler implements CommandHandler<CreatePostParams> {
   async execute(params: CreatePostParams): Promise<void> {
