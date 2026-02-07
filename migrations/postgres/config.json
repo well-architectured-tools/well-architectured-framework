@@ -1,10 +1,8 @@
 {
   "db": {
     "create-migrations-schema": true,
-    "migrations-schema": "taxonomy",
-    "create-schema": true,
-    "schema": "taxonomy",
-    "migrations-table": "taxonomy_migrations",
+    "migrations-schema": "migrations",
+    "migrations-table": "migrations",
     "database-url-var": "POSTGRES_URL",
     "migrations-dir": "./migrations/postgres",
     "migration-file-language": "sql"
