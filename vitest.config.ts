@@ -13,8 +13,20 @@ export default defineConfig({
           name: 'unit-tests',
           include: ['src/**/*.test.ts'],
           environment: 'node',
+          setupFiles: ['./vitest.setup.ts'],
           sequence: {
             concurrent: true,
+          },
+        },
+      },
+      {
+        test: {
+          name: 'infra-tests',
+          include: ['src/libs/**/*.infra-test.ts', 'src/modules/*/infrastructure/**/*.infra-test.ts'],
+          environment: 'node',
+          setupFiles: ['./vitest.setup.ts'],
+          sequence: {
+            concurrent: false,
           },
         },
       },
