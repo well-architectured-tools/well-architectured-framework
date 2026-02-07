@@ -3,7 +3,7 @@ export interface PostgresQueryResult<T> {
 }
 
 export interface PostgresService {
+  isReady(): Promise<boolean>;
   query<T extends Record<string, unknown>>(sql: string, values?: unknown[]): Promise<PostgresQueryResult<T>>;
-  close(): Promise<void>;
-  checkHealth(): Promise<void>;
+  closeConnection(): Promise<void>;
 }
