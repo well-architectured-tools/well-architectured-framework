@@ -154,23 +154,23 @@ export default defineConfig(
           default: 'disallow',
           rules: [
             {
-              from: ['lib'],
+              from: [['lib']],
               allow: [['lib', { libName: '${from.libName}' }], ['lib-index']],
             },
             {
-              from: ['lib', { libName: 'dependency-injection' }],
+              from: [['lib', { libName: 'dependency-injection' }]],
               allow: [['transport-index']],
             },
             {
-              from: ['module'],
+              from: [['module']],
               allow: [['module', { moduleName: '${from.moduleName}' }], ['lib-index']],
             },
             {
-              from: ['transport'],
+              from: [['transport']],
               allow: [['transport', { transportName: '${from.transportName}' }], ['lib-index'], ['module-index']],
             },
             {
-              from: ['index'],
+              from: [['index']],
               allow: [['lib-index']],
             },
           ],

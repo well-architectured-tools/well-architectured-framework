@@ -3,10 +3,12 @@ import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest }
 import fastifyStatic from '@fastify/static';
 import fastifyCors from '@fastify/cors';
 import fastifyCompress from '@fastify/compress';
+import { fastifyRouteNotFoundHandler } from './error-handlers/fastify-route-not-found-handler.js';
 import type { Transport } from '../../libs/kernel/index.js';
 import type { EnvironmentService } from '../../libs/environment/index.js';
 import type { LoggerService } from '../../libs/logger/index.js';
 import type { PostgresService } from '../../libs/postgres/index.js';
+import type { FastifySuccessResponse } from './responses/fastify-success-response.js';
 
 export class FastifyTransport implements Transport {
   private readonly environmentService: EnvironmentService;
@@ -30,14 +32,23 @@ export class FastifyTransport implements Transport {
     await server.register(fastifyCompress);
 
     // NEED TO ADD READINESS AND LIVENESS CHECK
+    // AJV disable?
+    // move assets to transports/fastify/public
+
+    server.setNotFoundHandler(fastifyRouteNotFoundHandler);
+    // server.setErrorHandler(httpDefaultErrorHandler());
 
     await server.register(fastifyStatic, {
       root: path.join(import.meta.dirname, '../../public'),
       prefix: '/',
     });
 
-    server.get('/', (_request: FastifyRequest, _reply: FastifyReply): unknown => {
-      return { hello: 'world' };
+    server.get('/', (_request: FastifyRequest, _reply: FastifyReply): FastifySuccessResponse<{ uptime: number }> => {
+      return {
+        data: {
+          uptime: process.uptime(),
+        },
+      };
     });
 
     const close: (signal: NodeJS.Signals) => Promise<void> = async (signal: NodeJS.Signals): Promise<void> => {
@@ -57,15 +68,18 @@ export class FastifyTransport implements Transport {
       void close(signal);
     });
 
-    server.listen({
-      port: this.environmentService.get('PORT'),
-      host: '0.0.0.0',
-    }, (error: Error | null, address: string): void => {
-      if (error) {
-        this.loggerService.error('Server failed to start', { error, address });
-      } else {
-        this.loggerService.info('Server started', { address });
-      }
-    });
+    server.listen(
+      {
+        port: this.environmentService.get('PORT'),
+        host: '0.0.0.0',
+      },
+      (error: Error | null, address: string): void => {
+        if (error) {
+          this.loggerService.error('Server failed to start', { error, address });
+        } else {
+          this.loggerService.info('Server started', { address });
+        }
+      },
+    );
   }
 }
