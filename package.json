@@ -30,7 +30,6 @@
   "dependencies": {
     "@fastify/compress": "^8.3.1",
     "@fastify/cors": "^11.2.0",
-    "@fastify/helmet": "^13.0.2",
     "@fastify/static": "^9.0.0",
     "@novadi/core": "^0.6.0",
     "dotenv-safe": "^9.1.0",
