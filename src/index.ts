@@ -1,11 +1,10 @@
-import type { Transport, TransportClass } from './libs/kernel/index.js';
-import { FastifyTransport } from './transports/fastify/index.js';
+import type { Transport } from './libs/kernel/index.js';
+import { diContainer } from './libs/dependency-injection/index.js';
 
-const transports: Set<TransportClass> = new Set<TransportClass>([FastifyTransport]);
+const transports: Transport[] = diContainer.resolveTypeAll('Transport');
 
 await Promise.all(
-  [...transports].map((transportClass: TransportClass): Promise<void> => {
-    const transport: Transport = new transportClass();
+  transports.map((transport: Transport): Promise<void> => {
     return Promise.resolve(transport.start());
   }),
 );

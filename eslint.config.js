@@ -158,6 +158,10 @@ export default defineConfig(
               allow: [['lib', { libName: '${from.libName}' }], ['lib-index']],
             },
             {
+              from: ['lib', { libName: 'dependency-injection' }],
+              allow: [['transport-index']],
+            },
+            {
               from: ['module'],
               allow: [['module', { moduleName: '${from.moduleName}' }], ['lib-index']],
             },
@@ -167,7 +171,7 @@ export default defineConfig(
             },
             {
               from: ['index'],
-              allow: [['lib-index'], ['transport-index']],
+              allow: [['lib-index']],
             },
           ],
         },
@@ -184,12 +188,7 @@ export default defineConfig(
     },
   },
   {
-    files: [
-      'src/**/*.test.ts',
-      'src/**/*.uc-test.ts',
-      'src/**/*.infra-test.ts',
-      'src/**/*.e2e-test.ts',
-    ],
+    files: ['src/**/*.test.ts', 'src/**/*.uc-test.ts', 'src/**/*.infra-test.ts', 'src/**/*.e2e-test.ts'],
     rules: {},
   },
 );
