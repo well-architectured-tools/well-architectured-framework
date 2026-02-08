@@ -1,6 +1,8 @@
 import path from 'node:path';
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import fastifyStatic from '@fastify/static';
+import fastifyCors from '@fastify/cors';
+import fastifyCompress from '@fastify/compress';
 import type { Transport } from '../../libs/kernel/index.js';
 import type { EnvironmentService } from '../../libs/environment/index.js';
 import type { LoggerService } from '../../libs/logger/index.js';
@@ -24,9 +26,12 @@ export class FastifyTransport implements Transport {
       await this.postgresService.closeConnection();
     });
 
+    await server.register(fastifyCors, { origin: '*' });
+    await server.register(fastifyCompress);
+
     // NEED TO ADD READINESS AND LIVENESS CHECK
 
-    server.register(fastifyStatic, {
+    await server.register(fastifyStatic, {
       root: path.join(import.meta.dirname, '../../public'),
       prefix: '/',
     });
