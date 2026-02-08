@@ -11,6 +11,7 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
     }
 
     this.env = {
+      NODE_ENV: this.getNodeEnv(),
       LOG_LEVEL: this.getLogLevel(),
       PORT: this.getPort(),
       POSTGRES_URL: this.getPostgresUrl(),
@@ -19,6 +20,15 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
 
   get<K extends keyof EnvironmentVariables>(key: K): EnvironmentVariables[K] {
     return this.env[key];
+  }
+
+  private getNodeEnv(): EnvironmentVariables['NODE_ENV'] {
+    const nodeEnv: string | undefined = process.env['NODE_ENV'];
+    const allowedNodeEnvs: EnvironmentVariables['NODE_ENV'][] = ['development', 'production'];
+    if (nodeEnv === undefined || !allowedNodeEnvs.includes(nodeEnv as EnvironmentVariables['NODE_ENV'])) {
+      throw new Error('Invalid Environment Variable: NODE_ENV');
+    }
+    return nodeEnv as EnvironmentVariables['NODE_ENV'];
   }
 
   private getLogLevel(): EnvironmentVariables['LOG_LEVEL'] {
