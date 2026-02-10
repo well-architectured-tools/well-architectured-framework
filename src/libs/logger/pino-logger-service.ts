@@ -79,6 +79,7 @@ export class PinoLoggerService implements LoggerService {
         level: logLevel,
       },
       production: { level: logLevel },
+      test: { level: logLevel },
     };
 
     return optionsMap[nodeEnv];

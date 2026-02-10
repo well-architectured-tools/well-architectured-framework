@@ -24,7 +24,7 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
 
   private getNodeEnv(): EnvironmentVariables['NODE_ENV'] {
     const nodeEnv: string | undefined = process.env['NODE_ENV'];
-    const allowedNodeEnvs: EnvironmentVariables['NODE_ENV'][] = ['development', 'production'];
+    const allowedNodeEnvs: EnvironmentVariables['NODE_ENV'][] = ['production', 'development', 'test'];
     if (nodeEnv === undefined || !allowedNodeEnvs.includes(nodeEnv as EnvironmentVariables['NODE_ENV'])) {
       throw new Error('Invalid Environment Variable: NODE_ENV');
     }

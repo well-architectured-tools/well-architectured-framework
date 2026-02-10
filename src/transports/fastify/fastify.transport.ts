@@ -1,9 +1,10 @@
 import path from 'node:path';
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
-import fastifyStatic from '@fastify/static';
 import fastifyCors from '@fastify/cors';
 import fastifyCompress from '@fastify/compress';
+import fastifyStatic from '@fastify/static';
 import { fastifyRouteNotFoundHandler } from './error-handlers/fastify-route-not-found-handler.js';
+import { fastifyDefaultErrorHandler } from './error-handlers/fastify-default-error-handler.js';
 import type { Transport } from '../../libs/kernel/index.js';
 import type { EnvironmentService } from '../../libs/environment/index.js';
 import type { LoggerService } from '../../libs/logger/index.js';
@@ -31,12 +32,7 @@ export class FastifyTransport implements Transport {
     await server.register(fastifyCors, { origin: '*' });
     await server.register(fastifyCompress);
 
-    // NEED TO ADD READINESS AND LIVENESS CHECK
-    // AJV disable?
-    // move assets to transports/fastify/public
-
-    server.setNotFoundHandler(fastifyRouteNotFoundHandler);
-    // server.setErrorHandler(httpDefaultErrorHandler());
+    // TODO: NEED TO ADD READINESS AND LIVENESS CHECK
 
     await server.register(fastifyStatic, {
       root: path.join(import.meta.dirname, '../../public'),
@@ -50,6 +46,9 @@ export class FastifyTransport implements Transport {
         },
       };
     });
+
+    server.setNotFoundHandler(fastifyRouteNotFoundHandler);
+    server.setErrorHandler(fastifyDefaultErrorHandler);
 
     const close: (signal: NodeJS.Signals) => Promise<void> = async (signal: NodeJS.Signals): Promise<void> => {
       try {
@@ -68,18 +67,15 @@ export class FastifyTransport implements Transport {
       void close(signal);
     });
 
-    server.listen(
-      {
+    try {
+      const address: string = await server.listen({
         port: this.environmentService.get('PORT'),
         host: '0.0.0.0',
-      },
-      (error: Error | null, address: string): void => {
-        if (error) {
-          this.loggerService.error('Server failed to start', { error, address });
-        } else {
-          this.loggerService.info('Server started', { address });
-        }
-      },
-    );
+      });
+      this.loggerService.info('Server started', { address });
+    } catch (error) {
+      this.loggerService.error('Server failed to start', { error });
+      throw error;
+    }
   }
 }
