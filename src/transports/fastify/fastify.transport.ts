@@ -5,11 +5,12 @@ import fastifyCompress from '@fastify/compress';
 import fastifyStatic from '@fastify/static';
 import { fastifyRouteNotFoundHandler } from './error-handlers/fastify-route-not-found-handler.js';
 import { fastifyDefaultErrorHandler } from './error-handlers/fastify-default-error-handler.js';
+import { livezHandler } from './health/livez-handler.js';
+import { readyzHandler } from './health/readyz-handler.js';
 import type { Transport } from '../../libs/kernel/index.js';
 import type { EnvironmentService } from '../../libs/environment/index.js';
 import type { LoggerService } from '../../libs/logger/index.js';
 import type { PostgresService } from '../../libs/postgres/index.js';
-import type { FastifySuccessResponse } from './responses/fastify-success-response.js';
 
 export class FastifyTransport implements Transport {
   private readonly environmentService: EnvironmentService;
@@ -37,22 +38,8 @@ export class FastifyTransport implements Transport {
       prefix: '/',
     });
 
-    server.get('/livez', (): FastifySuccessResponse<{ uptime: number }> => {
-      return {
-        data: {
-          uptime: process.uptime(),
-        },
-      };
-    });
-
-    server.get('/readyz', async (): Promise<FastifySuccessResponse<Record<string, boolean>>> => {
-      const isPostgresReady: boolean = await this.postgresService.isReady();
-      return {
-        data: {
-          isPostgresReady,
-        },
-      };
-    });
+    server.get('/livez', livezHandler);
+    server.get('/readyz', readyzHandler);
 
     server.setNotFoundHandler(fastifyRouteNotFoundHandler);
     server.setErrorHandler(fastifyDefaultErrorHandler);
