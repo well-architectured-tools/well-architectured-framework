@@ -1,5 +1,5 @@
 import path from 'node:path';
-import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
+import Fastify, { type FastifyInstance } from 'fastify';
 import fastifyCors from '@fastify/cors';
 import fastifyCompress from '@fastify/compress';
 import fastifyStatic from '@fastify/static';
@@ -32,17 +32,24 @@ export class FastifyTransport implements Transport {
     await server.register(fastifyCors, { origin: '*' });
     await server.register(fastifyCompress);
 
-    // TODO: NEED TO ADD READINESS AND LIVENESS CHECK
-
     await server.register(fastifyStatic, {
       root: path.join(import.meta.dirname, '../../public'),
       prefix: '/',
     });
 
-    server.get('/', (_request: FastifyRequest, _reply: FastifyReply): FastifySuccessResponse<{ uptime: number }> => {
+    server.get('/livez', (): FastifySuccessResponse<{ uptime: number }> => {
       return {
         data: {
           uptime: process.uptime(),
+        },
+      };
+    });
+
+    server.get('/readyz', async (): Promise<FastifySuccessResponse<Record<string, boolean>>> => {
+      const isPostgresReady: boolean = await this.postgresService.isReady();
+      return {
+        data: {
+          isPostgresReady,
         },
       };
     });
