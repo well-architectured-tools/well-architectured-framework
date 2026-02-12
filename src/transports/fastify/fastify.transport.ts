@@ -69,7 +69,7 @@ export class FastifyTransport implements Transport {
       this.loggerService.info('Server started', { address });
     } catch (error) {
       this.loggerService.error('Server failed to start', { error });
-      throw error;
+      process.exit(1);
     }
   }
 }

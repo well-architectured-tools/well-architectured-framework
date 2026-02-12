@@ -185,6 +185,7 @@ export default defineConfig(
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/no-null': 'off',
       'unicorn/prefer-ternary': 'off',
+      'unicorn/no-process-exit': 'off',
     },
   },
   {
