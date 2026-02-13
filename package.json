@@ -10,7 +10,7 @@
     "clear": "rm -rf ./dist",
     "build": "tsc -p tsconfig.build.json",
     "assets": "cp -r assets/. dist/server/",
-    "start": "node --inspect dist/server/index.js",
+    "start": "node --inspect --enable-source-maps dist/server/index.js",
     "format:check": "prettier ./src --check",
     "format:write": "prettier ./src --write",
     "lint:check": "eslint ./src",
