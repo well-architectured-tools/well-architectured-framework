@@ -1,6 +1,7 @@
+import { wrapErrorToApplicationErrorAndThrow } from '../../../../../libs/errors/index.js';
 import type { CommandHandler } from '../../../../../libs/kernel/index.js';
-import type { CreateTaxonomyTreeParams } from './create-taxonomy-tree.params.js';
 import type { TaxonomyTreeWriteGateway } from '../../shared/write-gateways/taxonomy-tree.write-gateway.js';
+import type { CreateTaxonomyTreeParams } from './create-taxonomy-tree.params.js';
 
 export class CreateTaxonomyTreeHandler implements CommandHandler<CreateTaxonomyTreeParams> {
   private readonly taxonomyTreeWriteGateway: TaxonomyTreeWriteGateway;
@@ -12,8 +13,8 @@ export class CreateTaxonomyTreeHandler implements CommandHandler<CreateTaxonomyT
   async execute(params: CreateTaxonomyTreeParams): Promise<void> {
     try {
       await this.taxonomyTreeWriteGateway.save(params);
-    } catch {
-      // UseCaseErrorHandler.wrapErrorsToApplicationErrors(error);
+    } catch (error) {
+      wrapErrorToApplicationErrorAndThrow(error);
     }
   }
 }
