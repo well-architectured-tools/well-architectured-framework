@@ -2,6 +2,8 @@ import type { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import { collectUseCaseRouteDefinitions } from './collect-use-case-route-definitions.js';
 import { registerUseCaseRoute } from './register-use-case-route.js';
 import type { UseCaseRouteDefinition } from './use-case-loader-types.js';
+import type { LoggerService } from '../../../../libs/logger/index.js';
+import { diContainer } from '../../../../libs/dependency-injection/index.js';
 
 export interface UseCaseLoaderPluginOptions {
   modulesDirectoryPath: string;
@@ -12,6 +14,7 @@ export const useCaseLoaderPlugin: FastifyPluginAsync<UseCaseLoaderPluginOptions>
   fastify: FastifyInstance,
   options: UseCaseLoaderPluginOptions,
 ): Promise<void> => {
+  const loggerService: LoggerService = diContainer.resolveType('LoggerService');
   const routeDefinitions: UseCaseRouteDefinition[] = await collectUseCaseRouteDefinitions(
     options.modulesDirectoryPath,
     options.routePrefix,
@@ -22,6 +25,12 @@ export const useCaseLoaderPlugin: FastifyPluginAsync<UseCaseLoaderPluginOptions>
       return registerUseCaseRoute(fastify, routeDefinition);
     }),
   );
+
+  loggerService.info('Use-case routes connected', {
+    routes: routeDefinitions.map((routeDefinition: UseCaseRouteDefinition): string => {
+      return `${routeDefinition.method} ${routeDefinition.routePath}`;
+    }),
+  });
 };
 
 export async function registerUseCaseLoaderPlugin(

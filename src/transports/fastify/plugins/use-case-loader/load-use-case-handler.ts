@@ -1,5 +1,6 @@
 import { pathToFileURL } from 'node:url';
 import type { CommandHandler, QueryHandler } from '../../../../libs/kernel/index.js';
+import { diContainer } from '../../../../libs/dependency-injection/index.js';
 
 type UseCaseHandlerConstructor = new () => CommandHandler<unknown> | QueryHandler<unknown, unknown>;
 
@@ -23,7 +24,19 @@ export async function loadUseCaseHandler(
     throw new Error(`Use case handler module "${filePath}" could not be resolved.`);
   }
 
-  return new handlerConstructor();
+  const handlerTypeName: string = handlerConstructor.name;
+  if (handlerTypeName.length === 0) {
+    throw new Error(`Use case handler module "${filePath}" exports an anonymous handler class.`);
+  }
+
+  try {
+    return diContainer.resolveType<CommandHandler<unknown> | QueryHandler<unknown, unknown>>(handlerTypeName);
+  } catch (error: unknown) {
+    throw new Error(
+      `Use case handler "${handlerTypeName}" from module "${filePath}" is not registered in diContainer.`,
+      { cause: error },
+    );
+  }
 }
 
 function isUseCaseHandlerConstructor(value: unknown): value is UseCaseHandlerConstructor {
