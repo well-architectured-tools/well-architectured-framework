@@ -67,6 +67,7 @@ export class PinoLoggerService implements LoggerService {
     const logLevel: EnvironmentVariables['LOG_LEVEL'] = this.environmentService.get('LOG_LEVEL');
 
     const optionsMap: Record<EnvironmentVariables['NODE_ENV'], pino.LoggerOptions> = {
+      production: { level: logLevel },
       development: {
         transport: {
           target: 'pino-pretty',
@@ -78,8 +79,17 @@ export class PinoLoggerService implements LoggerService {
         },
         level: logLevel,
       },
-      production: { level: logLevel },
-      test: { level: logLevel },
+      test: {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+            translateTime: 'SYS:isoTime',
+            ignore: 'pid,hostname',
+          },
+        },
+        level: logLevel,
+      },
     };
 
     return optionsMap[nodeEnv];
