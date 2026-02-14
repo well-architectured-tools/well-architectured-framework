@@ -159,7 +159,7 @@ export default defineConfig(
             },
             {
               from: [['lib', { libName: 'dependency-injection' }]],
-              allow: [['transport-index']],
+              allow: [['transport-index'], ['module-index']],
             },
             {
               from: [['module']],
@@ -167,7 +167,7 @@ export default defineConfig(
             },
             {
               from: [['transport']],
-              allow: [['transport', { transportName: '${from.transportName}' }], ['lib-index'], ['module-index']],
+              allow: [['transport', { transportName: '${from.transportName}' }], ['lib-index']],
             },
             {
               from: [['index']],
