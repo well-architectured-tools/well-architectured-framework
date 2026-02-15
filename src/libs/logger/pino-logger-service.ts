@@ -1,6 +1,6 @@
 import pino from 'pino';
 import type { LoggerService } from './logger-service.js';
-import { ApplicationError, errorToStringWithCauses } from '../errors/index.js';
+import { ApplicationError, errorToStringWithCauses, type ApplicationErrorType } from '../errors/index.js';
 import type { EnvironmentService, EnvironmentVariables } from '../environment/index.js';
 
 export class PinoLoggerService implements LoggerService {
@@ -33,6 +33,7 @@ export class PinoLoggerService implements LoggerService {
       const errorData: {
         message: string;
         stack: string;
+        type?: ApplicationErrorType;
         code?: string;
         details?: unknown;
       } = {
@@ -41,6 +42,7 @@ export class PinoLoggerService implements LoggerService {
       };
 
       if (data['error'] instanceof ApplicationError) {
+        errorData.type = data['error'].type;
         errorData.code = data['error'].code;
 
         if (data['error'].details !== undefined) {

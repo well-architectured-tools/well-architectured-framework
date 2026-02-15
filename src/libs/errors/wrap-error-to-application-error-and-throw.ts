@@ -11,5 +11,5 @@ export function wrapErrorToApplicationErrorAndThrow(error: unknown): never {
     applicationErrorOptions.cause = error;
   }
 
-  throw new ApplicationError('UNEXPECTED_HANDLER_ERROR', 'Unexpected Handler Error', applicationErrorOptions);
+  throw new ApplicationError('UNEXPECTED', 'UNEXPECTED_ERROR', 'Unexpected Error', applicationErrorOptions);
 }

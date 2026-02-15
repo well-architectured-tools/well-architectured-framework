@@ -4,6 +4,7 @@ export function errorToStringWithCauses(error: Error | ApplicationError): string
   let result: string = '';
 
   if (error instanceof ApplicationError) {
+    result += `ErrorType: ${error.type}\n`;
     result += `ErrorCode: ${error.code}\n`;
   }
 
