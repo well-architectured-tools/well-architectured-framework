@@ -167,7 +167,7 @@ export default defineConfig(
             },
             {
               from: [['transport']],
-              allow: [['transport', { transportName: '${from.transportName}' }], ['lib-index']],
+              allow: [['transport', { transportName: '${from.transportName}' }], ['lib-index'], ['module-index']],
             },
             {
               from: [['index']],

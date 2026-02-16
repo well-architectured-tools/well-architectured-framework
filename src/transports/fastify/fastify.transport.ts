@@ -11,7 +11,6 @@ import type { Transport } from '../../libs/kernel/index.js';
 import type { EnvironmentService } from '../../libs/environment/index.js';
 import type { LoggerService } from '../../libs/logger/index.js';
 import type { PostgresService } from '../../libs/postgres/index.js';
-import { fastifyUseCaseRoutesPlugin } from './plugins/fastify-use-case-routes-plugin.js';
 
 export class FastifyTransport implements Transport {
   private readonly environmentService: EnvironmentService;
@@ -41,10 +40,6 @@ export class FastifyTransport implements Transport {
 
     server.get('/livez', livezHandler);
     server.get('/readyz', readyzHandler);
-
-    await server.register(fastifyUseCaseRoutesPlugin, {
-      modulesDirectoryPath: path.join(import.meta.dirname, '../../modules'),
-    });
 
     server.setNotFoundHandler(fastifyRouteNotFoundHandler);
     server.setErrorHandler(fastifyDefaultErrorHandler);
