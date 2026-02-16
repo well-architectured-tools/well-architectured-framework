@@ -1,18 +1,17 @@
 import path from 'node:path';
 import { readdir } from 'node:fs/promises';
 import type { Dirent } from 'node:fs';
-import { pathToFileURL } from 'node:url';
 import type { FastifyInstance, FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify';
 import { diContainer } from '../../../libs/dependency-injection/index.js';
 import type { LoggerService } from '../../../libs/logger/index.js';
 import type { CommandHandler, QueryHandler } from '../../../libs/kernel/index.js';
+import { ApplicationError } from '../../../libs/errors/index.js';
 import type { FastifySuccessResponse } from '../responses/fastify-success-response.js';
 
 type UseCaseKind = 'command' | 'query';
 type FastifyUseCaseRouteMethod = 'POST' | 'GET';
 type UseCaseHandler = CommandHandler<unknown> | QueryHandler<unknown, unknown>;
-type UseCaseHandlerConstructor = new () => UseCaseHandler;
-export type FastifyRoutePrefix = '' | `/${string}`;
+type FastifyRoutePrefix = '' | `/${string}`;
 
 interface UseCaseHandlerFileMetadata {
   readonly filePath: string;
@@ -46,7 +45,7 @@ class FastifyUseCaseRoutesAutoRegistrar {
     const routeSpecs: FastifyUseCaseRouteSpec[] = await this.collectRouteSpecs();
 
     for (const routeSpec of routeSpecs) {
-      const handler: UseCaseHandler = await this.resolveHandlerFromContainer(routeSpec.filePath);
+      const handler: UseCaseHandler = this.resolveHandlerFromContainer(routeSpec.filePath);
       this.registerRoute(routeSpec, handler);
     }
 
@@ -83,10 +82,7 @@ class FastifyUseCaseRoutesAutoRegistrar {
     const routeSpecs: FastifyUseCaseRouteSpec[] = [];
 
     for (const handlerFile of handlerFiles) {
-      const moduleName: string | null = this.resolveModuleName(handlerFile.filePath);
-      if (moduleName === null) {
-        continue;
-      }
+      const moduleName: string = this.resolveModuleName(handlerFile.filePath);
 
       routeSpecs.push({
         method: handlerFile.useCaseKind === 'command' ? 'POST' : 'GET',
@@ -155,24 +151,20 @@ class FastifyUseCaseRoutesAutoRegistrar {
     return null;
   }
 
-  private resolveModuleName(filePath: string): string | null {
+  private resolveModuleName(filePath: string): string {
     const relativePath: string = path.relative(this.options.modulesDirectoryPath, filePath);
     const normalizedRelativePath: string = this.toPosixPath(relativePath);
     const [moduleName]: string[] = normalizedRelativePath.split('/');
 
     if (moduleName === undefined || moduleName.length === 0 || moduleName === '.' || moduleName === '..') {
-      return null;
+      throw new Error(`Failed to resolve module name for use case handler file "${filePath}".`);
     }
 
     return moduleName;
   }
 
   private buildRoutePath(moduleName: string, filePath: string): string {
-    const extension: string = path.extname(filePath);
-    const fileNameWithHandlerSuffix: string = path.basename(filePath, extension);
-    const useCaseName: string = fileNameWithHandlerSuffix.replace(/\.handler$/u, '');
-
-    return `${this.options.routePrefix}/${moduleName}/${useCaseName}`;
+    return `${this.options.routePrefix}/${moduleName}/${this.resolveUseCaseName(filePath)}`;
   }
 
   private normalizeRoutePrefix(routePrefix: FastifyRoutePrefix): FastifyRoutePrefix {
@@ -222,8 +214,8 @@ class FastifyUseCaseRoutesAutoRegistrar {
     }
   }
 
-  private async resolveHandlerFromContainer(filePath: string): Promise<UseCaseHandler> {
-    const handlerTokenName: string = await this.resolveHandlerTokenName(filePath);
+  private resolveHandlerFromContainer(filePath: string): UseCaseHandler {
+    const handlerTokenName: string = this.resolveHandlerTokenName(filePath);
 
     let resolvedHandler: unknown;
     try {
@@ -242,49 +234,40 @@ class FastifyUseCaseRoutesAutoRegistrar {
     return resolvedHandler;
   }
 
-  private async resolveHandlerTokenName(filePath: string): Promise<string> {
-    const fileUrl: string = pathToFileURL(filePath).href;
-    let importedModule: Record<string, unknown>;
-    try {
-      importedModule = (await import(fileUrl)) as Record<string, unknown>;
-    } catch (error: unknown) {
-      throw new Error(`Failed to import use case handler module "${filePath}".`, { cause: error });
+  private resolveHandlerTokenName(filePath: string): string {
+    const useCaseName: string = this.resolveUseCaseName(filePath);
+    const tokenNameParts: string[] = useCaseName.split(/[^A-Za-z0-9]+/u).filter((part: string): boolean => {
+      return part.length > 0;
+    });
+
+    if (tokenNameParts.length === 0) {
+      throw new Error(`Use case handler file "${filePath}" has invalid naming convention.`);
     }
 
-    const handlerConstructors: UseCaseHandlerConstructor[] = Object.values(importedModule).filter(
-      (value: unknown): value is UseCaseHandlerConstructor => {
-        return this.isUseCaseHandlerConstructor(value);
-      },
-    );
+    const handlerNameWithoutSuffix: string = tokenNameParts
+      .map((part: string): string => {
+        const firstCharacter: string | undefined = part[0];
+        if (firstCharacter === undefined) {
+          return '';
+        }
 
-    if (handlerConstructors.length !== 1) {
-      throw new Error(`Use case handler module "${filePath}" must export exactly one handler class.`);
-    }
+        return `${firstCharacter.toUpperCase()}${part.slice(1)}`;
+      })
+      .join('');
 
-    const handlerConstructor: UseCaseHandlerConstructor | undefined = handlerConstructors[0];
-    if (handlerConstructor === undefined) {
-      throw new Error(`Use case handler module "${filePath}" could not be resolved.`);
-    }
-
-    const handlerTokenName: string = handlerConstructor.name;
-    if (handlerTokenName.length === 0) {
-      throw new Error(`Use case handler module "${filePath}" exports an anonymous handler class.`);
-    }
-
-    return handlerTokenName;
+    return `${handlerNameWithoutSuffix}Handler`;
   }
 
-  private isUseCaseHandlerConstructor(value: unknown): value is UseCaseHandlerConstructor {
-    if (typeof value !== 'function') {
-      return false;
+  private resolveUseCaseName(filePath: string): string {
+    const extension: string = path.extname(filePath);
+    const fileNameWithHandlerSuffix: string = path.basename(filePath, extension);
+    const useCaseName: string = fileNameWithHandlerSuffix.replace(/\.handler$/u, '');
+
+    if (useCaseName.length === 0 || useCaseName === fileNameWithHandlerSuffix) {
+      throw new Error(`Use case handler file "${filePath}" must match "<use-case-name>.handler.ts|js".`);
     }
 
-    if (!('prototype' in value)) {
-      return false;
-    }
-
-    const executableCandidate: unknown = (value as { prototype: { execute?: unknown } }).prototype.execute;
-    return typeof executableCandidate === 'function';
+    return useCaseName;
   }
 
   private isExecutableUseCaseHandler(value: unknown): value is UseCaseHandler {
@@ -298,36 +281,63 @@ class FastifyUseCaseRoutesAutoRegistrar {
 
   private registerRoute(routeSpec: FastifyUseCaseRouteSpec, handler: UseCaseHandler): void {
     if (routeSpec.method === 'POST') {
-      this.registerCommandRoute(routeSpec.routePath, handler);
+      this.registerCommandRoute(routeSpec, handler);
       return;
     }
 
-    this.registerQueryRoute(routeSpec.routePath, handler);
+    this.registerQueryRoute(routeSpec, handler);
   }
 
-  private registerCommandRoute(routePath: string, handler: UseCaseHandler): void {
+  private registerCommandRoute(routeSpec: FastifyUseCaseRouteSpec, handler: UseCaseHandler): void {
     this.fastify.post(
-      routePath,
+      routeSpec.routePath,
       async (request: FastifyRequest<{ Body: unknown }>, _reply: FastifyReply): Promise<FastifySuccessResponse<true>> => {
-        await handler.execute(request.body);
+        await this.executeUseCase(handler, request.body, routeSpec);
 
         return { data: true };
       },
     );
   }
 
-  private registerQueryRoute(routePath: string, handler: UseCaseHandler): void {
+  private registerQueryRoute(routeSpec: FastifyUseCaseRouteSpec, handler: UseCaseHandler): void {
     this.fastify.get(
-      routePath,
+      routeSpec.routePath,
       async (
         request: FastifyRequest<{ Querystring: unknown }>,
         _reply: FastifyReply,
       ): Promise<FastifySuccessResponse<unknown>> => {
-        const result: unknown = await handler.execute(request.query);
+        const result: unknown = await this.executeUseCase(handler, request.query, routeSpec);
 
         return { data: result };
       },
     );
+  }
+
+  private async executeUseCase(
+    handler: UseCaseHandler,
+    payload: unknown,
+    routeSpec: FastifyUseCaseRouteSpec,
+  ): Promise<unknown> {
+    try {
+      return await handler.execute(payload);
+    } catch (error: unknown) {
+      throw this.normalizeUseCaseError(error, routeSpec);
+    }
+  }
+
+  private normalizeUseCaseError(error: unknown, routeSpec: FastifyUseCaseRouteSpec): ApplicationError {
+    if (error instanceof ApplicationError) {
+      return error;
+    }
+
+    const baseError: Error = error instanceof Error ? error : new Error('Unknown error');
+    return new ApplicationError('UNEXPECTED', 'USE_CASE_EXECUTION_FAILED', 'Use case execution failed.', {
+      cause: baseError,
+      details: {
+        method: routeSpec.method,
+        routePath: routeSpec.routePath,
+      },
+    });
   }
 
   private logRegisteredRoutes(routeSpecs: readonly FastifyUseCaseRouteSpec[]): void {
@@ -354,6 +364,5 @@ export const fastifyUseCaseRoutesPlugin: FastifyPluginAsync<FastifyUseCaseRoutes
     options,
     loggerService,
   );
-
   await routesAutoRegistrar.registerRoutes();
 };

@@ -1,5 +1,6 @@
 export type ApplicationErrorType =
   | 'NOT_FOUND'
+  | 'VALIDATION'
   | 'UNEXPECTED';
 
 export interface ApplicationErrorOptions {
