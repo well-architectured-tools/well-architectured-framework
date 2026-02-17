@@ -3,6 +3,7 @@ import Fastify, { type FastifyInstance } from 'fastify';
 import fastifyCors from '@fastify/cors';
 import fastifyCompress from '@fastify/compress';
 import fastifyStatic from '@fastify/static';
+import autoLoad from '@fastify/autoload';
 import { fastifyRouteNotFoundHandler } from './error-handlers/fastify-route-not-found-handler.js';
 import { fastifyDefaultErrorHandler } from './error-handlers/fastify-default-error-handler.js';
 import { livezHandler } from './health/livez-handler.js';
@@ -24,7 +25,10 @@ export class FastifyTransport implements Transport {
   }
 
   async start(): Promise<void> {
-    const server: FastifyInstance = Fastify({ logger: false });
+    const server: FastifyInstance = Fastify({
+      logger: false,
+      trustProxy: false,
+    });
 
     server.addHook('onClose', async (): Promise<void> => {
       await this.postgresService.closeConnection();
@@ -40,6 +44,14 @@ export class FastifyTransport implements Transport {
 
     server.get('/livez', livezHandler);
     server.get('/readyz', readyzHandler);
+
+    await server.register(autoLoad, {
+      dir: path.join(import.meta.dirname, 'controllers'),
+      forceESM: true,
+      dirNameRoutePrefix: false,
+      encapsulate: true,
+      matchFilter: /^[\\/]?(?:[a-z0-9-]+[\\/])*[a-z0-9-]+\.controller\.(?:ts|js)$/,
+    });
 
     server.setNotFoundHandler(fastifyRouteNotFoundHandler);
     server.setErrorHandler(fastifyDefaultErrorHandler);

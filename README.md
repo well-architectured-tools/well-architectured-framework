@@ -2,6 +2,7 @@
 
 ## TODO
 
+- remove trailing slash from url
 - validate request and response and gateway response
 - tests
 - openapi

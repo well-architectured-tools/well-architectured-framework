@@ -6,11 +6,11 @@ import { ApplicationError, errorToStringWithCauses } from '../../../libs/errors/
 import type { EnvironmentService } from '../../../libs/environment/index.js';
 import { getHttpStatusCodeByApplicationErrorType } from './get-http-status-code-by-application-error-type.js';
 
-export function fastifyApplicationErrorHandler(
-  error: ApplicationError,
-  _request: FastifyRequest,
-  reply: FastifyReply,
-): void {
+export function fastifyApplicationErrorHandler(error: unknown, _request: FastifyRequest, reply: FastifyReply): void {
+  if (!(error instanceof ApplicationError)) {
+    throw error;
+  }
+
   const loggerService: LoggerService = diContainer.resolveType('LoggerService');
   const environmentService: EnvironmentService = diContainer.resolveType('EnvironmentService');
 

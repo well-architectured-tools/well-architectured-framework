@@ -186,6 +186,7 @@ export default defineConfig(
       'unicorn/no-null': 'off',
       'unicorn/prefer-ternary': 'off',
       'unicorn/no-process-exit': 'off',
+      'unicorn/no-anonymous-default-export': 'off',
     },
   },
   {
