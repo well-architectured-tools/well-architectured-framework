@@ -2,6 +2,9 @@
 
 ## TODO
 
+- remove try/catch from controllers and use default error handler
+- Ajv i18n, Ajv custom errors, configs and plugins
+- content type is only application/json
 - remove trailing slash from url
 - validate request and response and gateway response
 - tests

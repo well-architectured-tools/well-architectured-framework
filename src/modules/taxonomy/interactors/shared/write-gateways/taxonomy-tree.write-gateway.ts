@@ -1,3 +1,3 @@
 export interface TaxonomyTreeWriteGateway {
-  save(taxonomyTree: unknown): Promise<void>;
+  save(taxonomyTree: unknown): Promise<unknown>;
 }
