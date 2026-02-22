@@ -2,11 +2,11 @@
 
 ## TODO
 
-- remove try/catch from controllers and use default error handler
+- validate request and response
 - Ajv i18n, Ajv custom errors, configs and plugins
 - content type is only application/json
 - remove trailing slash from url
-- validate request and response and gateway response
+- validate gateway response
 - tests
 - openapi
 - trace id and correlation id and observability and logger

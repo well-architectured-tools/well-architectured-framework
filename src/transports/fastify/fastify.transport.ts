@@ -28,6 +28,26 @@ export class FastifyTransport implements Transport {
     const server: FastifyInstance = Fastify({
       logger: false,
       trustProxy: false,
+      ajv: {
+        customOptions: {
+          strict: true,
+          strictSchema: true,
+          strictNumbers: true,
+          strictTypes: true,
+          strictTuples: true,
+          strictRequired: true,
+          allowMatchingProperties: false,
+          allowUnionTypes: false,
+          validateFormats: true,
+          validateSchema: true,
+          coerceTypes: false,
+          useDefaults: false,
+          removeAdditional: 'all',
+          allErrors: false,
+          verbose: false,
+          inlineRefs: true,
+        },
+      },
     });
 
     server.addHook('onClose', async (): Promise<void> => {
