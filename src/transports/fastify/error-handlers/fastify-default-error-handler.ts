@@ -10,20 +10,37 @@ export function fastifyDefaultErrorHandler(error: FastifyError, _request: Fastif
   const loggerService: LoggerService = diContainer.resolveType('LoggerService');
   const environmentService: EnvironmentService = diContainer.resolveType('EnvironmentService');
 
-  loggerService.error('DefaultErrorHandler', { error });
+  if (error.code === 'FST_ERR_VALIDATION') {
+    const errorType: ApplicationErrorType = 'VALIDATION';
+    const errorResponse: FastifyErrorResponse = {
+      error: {
+        type: errorType,
+        code: 'VALIDATION_ERROR',
+        message: error.message,
+        details: {
+          validationContext: error.validationContext,
+          validation: error.validation,
+        },
+      },
+    };
 
-  const errorType: ApplicationErrorType = 'UNEXPECTED';
-  const errorResponse: FastifyErrorResponse = {
-    error: {
-      type: errorType,
-      code: error.code,
-      message: error.message,
-    },
-  };
+    reply.code(getHttpStatusCodeByApplicationErrorType(errorType)).send(errorResponse);
+  } else {
+    loggerService.error('DefaultErrorHandler', { error });
 
-  if (environmentService.get('NODE_ENV') === 'development') {
-    errorResponse.error.stack = errorToStringWithCauses(error);
+    const errorType: ApplicationErrorType = 'UNEXPECTED';
+    const errorResponse: FastifyErrorResponse = {
+      error: {
+        type: errorType,
+        code: error.code,
+        message: error.message,
+      },
+    };
+
+    if (environmentService.get('NODE_ENV') === 'development') {
+      errorResponse.error.stack = errorToStringWithCauses(error);
+    }
+
+    reply.code(getHttpStatusCodeByApplicationErrorType(errorType)).send(errorResponse);
   }
-
-  reply.code(getHttpStatusCodeByApplicationErrorType(errorType)).send(errorResponse);
 }

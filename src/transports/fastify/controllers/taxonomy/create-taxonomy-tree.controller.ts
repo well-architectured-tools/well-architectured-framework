@@ -5,7 +5,6 @@ import {
   CreateTaxonomyTreeHandler,
   type CreateTaxonomyTreeParams,
 } from '../../../../modules/taxonomy/index.js';
-import { fastifyApplicationErrorHandler } from '../../error-handlers/fastify-application-error-handler.js';
 import type { FastifySuccessResponse } from '../../responses/fastify-success-response.js';
 import type { FastifySchema } from 'fastify/types/schema.js';
 import type { FastifyErrorResponse } from '../../responses/fastify-error-response.js';
@@ -51,16 +50,13 @@ export default (server: FastifyInstance): void => {
   };
 
   const handler: HandlerType = diContainer.resolveType(handlerName);
+
   server[method](path, { schema }, async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    try {
-      const handlerParams: HandlerParamsType = request.body as HandlerParamsType;
-      const handlerSuccessResult: HandlerSuccessResultType = await handler.execute(handlerParams);
-      const successResult: FastifySuccessResponse<HandlerSuccessResultType> = {
-        data: handlerSuccessResult,
-      };
-      reply.code(successResponseCode).send(successResult);
-    } catch (error) {
-      fastifyApplicationErrorHandler(error, request, reply);
-    }
+    const handlerParams: HandlerParamsType = request.body as HandlerParamsType;
+    const handlerSuccessResult: HandlerSuccessResultType = await handler.execute(handlerParams);
+    const successResult: FastifySuccessResponse<HandlerSuccessResultType> = {
+      data: handlerSuccessResult,
+    };
+    reply.code(successResponseCode).send(successResult);
   });
 };

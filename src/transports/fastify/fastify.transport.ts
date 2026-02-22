@@ -37,6 +37,9 @@ export class FastifyTransport implements Transport {
     await server.register(fastifyCors, { origin: '*' });
     await server.register(fastifyCompress);
 
+    server.setNotFoundHandler(fastifyRouteNotFoundHandler);
+    server.setErrorHandler(fastifyDefaultErrorHandler);
+
     await server.register(fastifyStatic, {
       root: path.join(import.meta.dirname, '../../public'),
       prefix: '/',
@@ -52,9 +55,6 @@ export class FastifyTransport implements Transport {
       encapsulate: true,
       matchFilter: /^[\\/]?(?:[a-z0-9-]+[\\/])*[a-z0-9-]+\.controller\.(?:ts|js)$/,
     });
-
-    server.setNotFoundHandler(fastifyRouteNotFoundHandler);
-    server.setErrorHandler(fastifyDefaultErrorHandler);
 
     const close: (signal: NodeJS.Signals) => Promise<void> = async (signal: NodeJS.Signals): Promise<void> => {
       try {
