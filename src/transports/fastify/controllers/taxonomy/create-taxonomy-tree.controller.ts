@@ -57,6 +57,7 @@ export default (server: FastifyInstance): void => {
     const successResult: FastifySuccessResponse<HandlerSuccessResultType> = {
       data: handlerSuccessResult,
     };
+    typia.assert<FastifySuccessResponse<HandlerSuccessResultType>>(successResponseCode);
     reply.code(successResponseCode).send(successResult);
   });
 };

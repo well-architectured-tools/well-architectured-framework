@@ -2,7 +2,7 @@
 
 ## TODO
 
-- validate request and response
+- handle typia.assert response error 
 - Ajv i18n, Ajv custom errors, configs and plugins
 - content type is only application/json
 - remove trailing slash from url

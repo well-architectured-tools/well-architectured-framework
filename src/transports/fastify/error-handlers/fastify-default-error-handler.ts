@@ -1,4 +1,4 @@
-import type { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
+import { type FastifyError, type FastifyReply, type FastifyRequest } from 'fastify';
 import { diContainer } from '../../../libs/dependency-injection/index.js';
 import type { LoggerService } from '../../../libs/logger/index.js';
 import type { EnvironmentService } from '../../../libs/environment/index.js';
@@ -7,6 +7,7 @@ import { ApplicationError, type ApplicationErrorType, errorToStringWithCauses } 
 import { getHttpStatusCodeByApplicationErrorType } from './get-http-status-code-by-application-error-type.js';
 import { fastifyValidationErrorHandler } from './fastify-validation-error-handler.js';
 import { fastifyApplicationErrorHandler } from './fastify-application-error-handler.js';
+import { fastifySerializationErrorHandler } from './fastify-serialization-error-handler.js';
 
 export function fastifyDefaultErrorHandler(
   error: ApplicationError | FastifyError,
@@ -23,6 +24,11 @@ export function fastifyDefaultErrorHandler(
 
   if (['FST_ERR_VALIDATION', 'FST_ERR_CTP_INVALID_JSON_BODY', 'FST_ERR_CTP_INVALID_MEDIA_TYPE'].includes(error.code)) {
     fastifyValidationErrorHandler(error, request, reply);
+    return;
+  }
+
+  if ('serialization' in error) {
+    fastifySerializationErrorHandler(error, request, reply);
     return;
   }
 
