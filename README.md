@@ -11,10 +11,10 @@
 - openapi
 - trace id and correlation id and observability and logger
 - versioned api
-- Kafka and event bus
 - changelog and release docker container
-- helm and deploy to k8s
-- mcp transport
-- RBAC
+- Kafka and event bus
 - Redis
 - ClickHouse
+- RBAC
+- mcp transport
+- helm and deploy to k8s

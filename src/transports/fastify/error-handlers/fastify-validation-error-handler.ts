@@ -21,7 +21,11 @@ export function fastifyValidationErrorHandler(
   };
 
   const environmentService: EnvironmentService = diContainer.resolveType('EnvironmentService');
-  if (environmentService.get('NODE_ENV') === 'development') {
+  if (
+    environmentService.get('NODE_ENV') === 'development' &&
+    error.validationContext !== undefined &&
+    error.validation !== undefined
+  ) {
     errorResponse.error.details = {
       validationContext: error.validationContext,
       validation: error.validation,
