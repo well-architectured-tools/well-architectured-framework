@@ -12,6 +12,7 @@ import { addTypiaAsJsonSchema } from '../../helpers/add-typia-as-json-schema.js'
 import type { IJsonSchemaCollection } from 'typia/src/schemas/json/IJsonSchemaCollection.js';
 import typia from 'typia';
 import type { _HTTPMethods } from 'fastify/types/utils.js';
+import { handleResponseValidationError } from '../../helpers/handle-response-validation-error.js';
 
 export default (server: FastifyInstance): void => {
   const method: Lowercase<_HTTPMethods> = 'post';
@@ -53,11 +54,19 @@ export default (server: FastifyInstance): void => {
 
   server[method](path, { schema }, async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
     const handlerParams: HandlerParamsType = request.body as HandlerParamsType;
+
     const handlerSuccessResult: HandlerSuccessResultType = await handler.execute(handlerParams);
+
     const successResult: FastifySuccessResponse<HandlerSuccessResultType> = {
       data: handlerSuccessResult,
     };
-    typia.assert<FastifySuccessResponse<HandlerSuccessResultType>>(successResponseCode);
+
+    try {
+      typia.assert<FastifySuccessResponse<HandlerSuccessResultType>>(successResponseCode);
+    } catch (error) {
+      handleResponseValidationError(error);
+    }
+
     reply.code(successResponseCode).send(successResult);
   });
 };
