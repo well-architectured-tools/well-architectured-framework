@@ -5,7 +5,6 @@
 - Ajv i18n, Ajv custom errors, configs and plugins
 - content type is only application/json
 - remove trailing slash from url
-- validate gateway response
 - tests
 - openapi
 - trace id and correlation id and observability and logger
