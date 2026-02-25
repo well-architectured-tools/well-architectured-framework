@@ -31,11 +31,6 @@ export class FastifyTransport implements Transport {
       ajv: {
         customOptions: {
           strict: true,
-          strictSchema: true,
-          strictNumbers: true,
-          strictTypes: true,
-          strictTuples: true,
-          strictRequired: true,
           allowMatchingProperties: false,
           allowUnionTypes: false,
           validateFormats: true,
