@@ -2,7 +2,6 @@
 
 ## TODO
 
-- e2e tests
 - openapi and schema dont repeat ErrorResponse
 - trace id and correlation id and observability and logger
 - versioned api

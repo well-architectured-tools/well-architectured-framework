@@ -19,6 +19,7 @@
     "unit-tests": "vitest --config ./vitest.config.ts --project unit-tests",
     "use-case-tests": "npm run infra:up && vitest --config ./vitest.config.ts --project use-case-tests",
     "infra-tests": "npm run infra:up && vitest --config ./vitest.config.ts --project infra-tests",
+    "e2e-tests": "npm run infra:up && vitest --config ./vitest.config.ts --project e2e-tests",
     "infra:up": "docker compose -f infra/compose.yaml up -d",
     "infra:down": "docker compose -f infra/compose.yaml down",
     "migrations:create": "node-pg-migrate --config-file=migrations/postgres/config.json create migration",

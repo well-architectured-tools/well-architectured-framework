@@ -6,7 +6,7 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
   private readonly env: EnvironmentVariables;
 
   constructor() {
-    if (process.env['LOAD_DOTENV'] === 'true') {
+    if (this.getLoadDotenv()) {
       config();
     }
 
@@ -24,8 +24,8 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
   }
 
   private getLoadDotenv(): EnvironmentVariables['LOAD_DOTENV'] {
-    const loadDotenv: string | undefined = process.env['LOAD_DOTENV'];
-    if (loadDotenv === undefined || (loadDotenv !== 'true' && loadDotenv !== 'false')) {
+    const loadDotenv: string = process.env['LOAD_DOTENV'] ?? 'true';
+    if (loadDotenv !== 'true' && loadDotenv !== 'false') {
       throw new Error('Invalid Environment Variable: LOAD_DOTENV');
     }
     return loadDotenv === 'true';

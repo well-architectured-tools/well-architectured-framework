@@ -192,6 +192,8 @@ export default defineConfig(
   },
   {
     files: ['src/**/*.test.ts', 'src/**/*.uc-test.ts', 'src/**/*.infra-test.ts', 'src/**/*.e2e-test.ts'],
-    rules: {},
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+    },
   },
 );

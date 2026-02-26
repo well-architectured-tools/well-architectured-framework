@@ -59,6 +59,23 @@ export default defineConfig({
           },
         },
       },
+      {
+        plugins: [NovadiUnplugin.vite({ enableAutowiring: true })],
+        test: {
+          name: 'e2e-tests',
+          env: {
+            TEST_PROJECT: 'e2e-tests',
+            E2E_BASE_URL: process.env['E2E_BASE_URL'] ?? `http://localhost:${testEnvValues.PORT}`,
+            ...testEnvValues,
+          },
+          include: ['src/transports/*/e2e/**/*.e2e-test.ts'],
+          environment: 'node',
+          setupFiles: ['./vitest.setup.ts'],
+          sequence: {
+            concurrent: false,
+          },
+        },
+      },
     ],
   },
 });
