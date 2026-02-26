@@ -28,6 +28,7 @@ export class FastifyTransport implements Transport {
     const server: FastifyInstance = Fastify({
       logger: false,
       trustProxy: false,
+      ignoreTrailingSlash: true,
       ajv: {
         customOptions: {
           strict: true,

@@ -3,7 +3,6 @@
 ## TODO
 
 - content type is only application/json
-- remove trailing slash from url
 - tests
 - openapi
 - trace id and correlation id and observability and logger
