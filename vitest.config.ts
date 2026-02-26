@@ -10,6 +10,9 @@ export default defineConfig({
       {
         test: {
           name: 'unit-tests',
+          env: {
+            TEST_PROJECT: 'unit-tests',
+          },
           include: ['src/**/*.test.ts'],
           environment: 'node',
           setupFiles: ['./vitest.setup.ts'],
@@ -22,9 +25,16 @@ export default defineConfig({
         plugins: [NovadiUnplugin.vite({ enableAutowiring: true })],
         test: {
           name: 'infra-tests',
+          env: {
+            TEST_PROJECT: 'infra-tests',
+            LOAD_DOTENV: 'false',
+            NODE_ENV: 'test',
+            LOG_LEVEL: 'warn',
+            PORT: '3000',
+            POSTGRES_URL: 'postgres://postgres:postgres@localhost:5555/postgres',
+          },
           include: ['src/libs/**/*.infra-test.ts', 'src/modules/*/infrastructure/**/*.infra-test.ts'],
           environment: 'node',
-          globalSetup: ['./vitest.global.ts'],
           setupFiles: ['./vitest.setup.ts'],
           sequence: {
             concurrent: false,

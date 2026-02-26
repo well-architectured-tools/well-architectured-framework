@@ -1,4 +1,5 @@
 export interface EnvironmentVariables {
+  readonly LOAD_DOTENV: boolean;
   readonly NODE_ENV: 'production' | 'development' | 'test';
   readonly LOG_LEVEL: 'info' | 'warn' | 'error';
   readonly PORT: number;

@@ -6,11 +6,12 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
   private readonly env: EnvironmentVariables;
 
   constructor() {
-    if (process.env['DOTENV_SAFE_LOADED'] !== 'true') {
+    if (process.env['LOAD_DOTENV'] === 'true') {
       config();
     }
 
     this.env = {
+      LOAD_DOTENV: this.getLoadDotenv(),
       NODE_ENV: this.getNodeEnv(),
       LOG_LEVEL: this.getLogLevel(),
       PORT: this.getPort(),
@@ -20,6 +21,14 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
 
   get<K extends keyof EnvironmentVariables>(key: K): EnvironmentVariables[K] {
     return this.env[key];
+  }
+
+  private getLoadDotenv(): EnvironmentVariables['LOAD_DOTENV'] {
+    const loadDotenv: string | undefined = process.env['LOAD_DOTENV'];
+    if (loadDotenv === undefined || (loadDotenv !== 'true' && loadDotenv !== 'false')) {
+      throw new Error('Invalid Environment Variable: LOAD_DOTENV');
+    }
+    return loadDotenv === 'true';
   }
 
   private getNodeEnv(): EnvironmentVariables['NODE_ENV'] {
