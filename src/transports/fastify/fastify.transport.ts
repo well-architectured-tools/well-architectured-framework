@@ -53,6 +53,8 @@ export class FastifyTransport implements Transport {
     await server.register(fastifyCors, { origin: '*' });
     await server.register(fastifyCompress);
 
+    server.removeContentTypeParser(['text/plain']);
+
     server.setNotFoundHandler(fastifyRouteNotFoundHandler);
     server.setErrorHandler(fastifyDefaultErrorHandler);
 
