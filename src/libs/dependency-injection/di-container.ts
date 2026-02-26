@@ -5,6 +5,8 @@ import { PgPostgresService } from '../postgres/index.js';
 import { FastifyTransport } from '../../transports/fastify/index.js';
 import { CreateTaxonomyTreeHandler, InMemoryTaxonomyTreeWriteGateway } from '../../modules/taxonomy/index.js';
 
+// const testProject: 'use-case-tests' | 'infra-tests' | 'e2e-tests' | undefined = process.env['TEST_PROJECT'];
+
 const container: Container = new Container();
 const builder: Builder = container.builder();
 
