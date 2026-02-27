@@ -7,7 +7,7 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
 
   constructor() {
     if (this.getLoadDotenv()) {
-      config();
+      config({ quiet: true });
     }
 
     this.env = {
