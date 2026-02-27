@@ -2,7 +2,8 @@ import { defineConfig } from 'vitest/config';
 import { NovadiUnplugin } from '@novadi/core/unplugin';
 import type { EnvironmentVariables } from './src/libs/environment/index.js';
 
-const testEnvValues: Record<keyof EnvironmentVariables, string> = {
+const testEnvValues: Record<keyof EnvironmentVariables, string> & { NODE_OPTIONS: string } = {
+  NODE_OPTIONS: '--disable-warning=ExperimentalWarning',
   LOAD_DOTENV: 'false',
   NODE_ENV: 'test',
   LOG_LEVEL: 'warn',
