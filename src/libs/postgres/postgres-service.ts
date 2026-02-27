@@ -4,6 +4,6 @@ export interface PostgresQueryResult<T> {
 
 export interface PostgresService {
   isReady(): Promise<boolean>;
-  query<T extends Record<string, unknown>>(sql: string, values?: unknown[]): Promise<PostgresQueryResult<T>>;
+  query<T extends Record<string, unknown>>(sql: string, values?: (number | string)[]): Promise<PostgresQueryResult<T>>;
   closeConnection(): Promise<void>;
 }

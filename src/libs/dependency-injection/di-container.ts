@@ -2,6 +2,7 @@ import { Builder, Container } from '@novadi/core';
 import { DotenvSafeEnvironmentService } from '../environment/index.js';
 import { PinoLoggerService } from '../logger/index.js';
 import { PgPostgresService } from '../postgres/index.js';
+import { NodeSqliteService } from '../sqlite/index.js';
 import { FastifyTransport } from '../../transports/fastify/index.js';
 import { CreateTaxonomyTreeHandler, InMemoryTaxonomyTreeWriteGateway } from '../../modules/taxonomy/index.js';
 
@@ -12,6 +13,7 @@ const builder: Builder = container.builder();
 builder.registerType(DotenvSafeEnvironmentService).as('EnvironmentService').singleInstance();
 builder.registerType(PinoLoggerService).as('LoggerService').singleInstance();
 builder.registerType(PgPostgresService).as('PostgresService').singleInstance();
+builder.registerType(NodeSqliteService).as('SqliteService').singleInstance();
 
 // TRANSPORT
 builder.registerType(FastifyTransport).as('Transport').singleInstance();

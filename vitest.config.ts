@@ -8,6 +8,7 @@ const testEnvValues: Record<keyof EnvironmentVariables, string> = {
   LOG_LEVEL: 'warn',
   PORT: '3000',
   POSTGRES_URL: 'postgres://postgres:postgres@localhost:5555/postgres',
+  SQLITE_URL: ':memory:',
 };
 
 export default defineConfig({

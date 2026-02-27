@@ -2,6 +2,8 @@
 
 ## TODO
 
+- infra tests for interfaces
+- migrations and seeds before start
 - openapi and schema dont repeat ErrorResponse
 - trace id and correlation id and observability and logger
 - versioned api
