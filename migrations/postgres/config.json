@@ -3,8 +3,9 @@
     "create-migrations-schema": true,
     "migrations-schema": "migrations",
     "migrations-table": "migrations",
-    "database-url-var": "POSTGRES_URL",
     "migrations-dir": "./migrations/postgres",
+    "ignore-pattern": "(?:\\..*|config\\.json)",
+    "verbose": false,
     "migration-file-language": "sql"
   }
 }
