@@ -16,7 +16,6 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
       LOG_LEVEL: this.getLogLevel(),
       PORT: this.getPort(),
       POSTGRES_URL: this.getPostgresUrl(),
-      SQLITE_URL: this.getSqliteUrl(),
     };
   }
 
@@ -64,13 +63,5 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
       throw new Error('Invalid Environment Variable: POSTGRES_URL');
     }
     return postgresUrl;
-  }
-
-  private getSqliteUrl(): EnvironmentVariables['SQLITE_URL'] {
-    const sqliteUrl: string | undefined = process.env['SQLITE_URL'];
-    if (sqliteUrl === undefined) {
-      throw new Error('Invalid Environment Variable: SQLITE_URL');
-    }
-    return sqliteUrl;
   }
 }

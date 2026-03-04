@@ -2,14 +2,13 @@ import { defineConfig } from 'vitest/config';
 import { NovadiUnplugin } from '@novadi/core/unplugin';
 import type { EnvironmentVariables } from './src/libs/environment/index.js';
 
-const testEnvValues: Record<keyof EnvironmentVariables, string> & { NODE_OPTIONS: string } = {
+const testEnvValues: { NODE_OPTIONS: string } & Record<keyof EnvironmentVariables, string> = {
   NODE_OPTIONS: '--disable-warning=ExperimentalWarning',
   LOAD_DOTENV: 'false',
   NODE_ENV: 'test',
   LOG_LEVEL: 'warn',
   PORT: '3000',
   POSTGRES_URL: 'postgres://postgres:postgres@localhost:5555/postgres',
-  SQLITE_URL: ':memory:',
 };
 
 export default defineConfig({
@@ -35,6 +34,7 @@ export default defineConfig({
           name: 'use-case-tests',
           env: {
             TEST_PROJECT: 'use-case-tests',
+            SQLITE_URL: ':memory:',
             ...testEnvValues,
           },
           include: ['src/modules/*/interactors/{commands,queries}/*/*.uc-test.ts'],
@@ -51,6 +51,7 @@ export default defineConfig({
           name: 'infra-tests',
           env: {
             TEST_PROJECT: 'infra-tests',
+            SQLITE_URL: ':memory:',
             ...testEnvValues,
           },
           include: ['src/libs/**/*.infra-test.ts', 'src/modules/*/infrastructure/**/*.infra-test.ts'],
