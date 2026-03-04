@@ -3,6 +3,7 @@ export * from './handlers/operation-handler.js';
 
 export * from './helpers/generate-uuid-v4.js';
 export * from './helpers/generate-uuid-v7.js';
+export * from './helpers/get-env-var-or-throw.js';
 export * from './helpers/is-iso-date-time-string.js';
 export * from './helpers/is-json-string.js';
 export * from './helpers/is-uuid-v4.js';

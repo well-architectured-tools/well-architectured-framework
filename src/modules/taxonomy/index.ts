@@ -1,7 +1,6 @@
-export * from './infrastructure/write-gateways/in-memory.taxonomy-tree.write-gateway.js';
+export * from './interactors/commands/create-taxonomy/create-taxonomy.params.js';
+export * from './interactors/commands/create-taxonomy/create-taxonomy.dto.js';
+export * from './interactors/commands/create-taxonomy/create-taxonomy.handler.js';
 
-export * from './interactors/commands/create-taxonomy-tree/create-taxonomy-tree.params.js';
-export * from './interactors/commands/create-taxonomy-tree/create-taxonomy-tree.dto.js';
-export * from './interactors/commands/create-taxonomy-tree/create-taxonomy-tree.handler.js';
-
-export * from './interactors/shared/write-gateways/taxonomy-tree.write-gateway.js';
+export * from './infrastructure/write-gateways/postgres.taxonomy.write-gateway.js';
+export * from './infrastructure/write-gateways/sqlite.taxonomy.write-gateway.js';

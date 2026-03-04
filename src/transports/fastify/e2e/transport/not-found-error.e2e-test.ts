@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { HttpClient, type HttpClientResponse } from '../helpers/http-client.js';
-import { getBaseUrl } from '../helpers/get-base-url.js';
 import type { FastifyErrorResponse } from '../../responses/fastify-error-response.js';
+import { getEnvVarOrThrow } from '../../../../libs/kernel/index.js';
 
 describe('Not Found Error', (): void => {
-  const httpClient: HttpClient = new HttpClient(getBaseUrl());
+  const httpClient: HttpClient = new HttpClient(getEnvVarOrThrow('E2E_BASE_URL'));
 
   it('should return 404', async (): Promise<void> => {
     const notExistingRoute: string = '/page-does-not-exist';

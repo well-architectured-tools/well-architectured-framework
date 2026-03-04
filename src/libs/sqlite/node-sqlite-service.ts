@@ -1,15 +1,15 @@
 import { DatabaseSync, type SQLOutputValue } from 'node:sqlite';
 import type { SqliteQueryResult, SqliteService } from './sqlite-service.js';
-import type { EnvironmentService } from '../environment/index.js';
 import type { LoggerService } from '../logger/index.js';
+import { getEnvVarOrThrow } from '../kernel/index.js';
 
 export class NodeSqliteService implements SqliteService {
   private readonly loggerService: LoggerService;
   private readonly database: DatabaseSync;
 
-  constructor(environmentService: EnvironmentService, loggerService: LoggerService) {
+  constructor(loggerService: LoggerService) {
     this.loggerService = loggerService;
-    this.database = new DatabaseSync(environmentService.get('SQLITE_URL'));
+    this.database = new DatabaseSync(getEnvVarOrThrow('SQLITE_URL'));
   }
 
   isReady(): Promise<boolean> {
