@@ -16,7 +16,7 @@ import { handleResponseValidationError } from '../../helpers/handle-response-val
 
 export default (server: FastifyInstance): void => {
   const method: Lowercase<_HTTPMethods> = 'post';
-  const path: string = '/taxonomy/create-tree';
+  const path: string = '/taxonomy/create-taxonomy';
   const successResponseCode: number = 200;
 
   const handlerName: string = 'CreateTaxonomyHandler';

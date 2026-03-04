@@ -15,7 +15,7 @@ export class SqliteTaxonomyWriteGateway implements TaxonomyWriteGateway {
       await this.sqliteService.query(
         `
           INSERT INTO taxonomies (id, name, created_at)
-          VALUES ($1, $2, $3)
+          VALUES (?, ?, ?)
         `,
         [taxonomy.id.value, taxonomy.name, taxonomy.createdAt.iso],
       );

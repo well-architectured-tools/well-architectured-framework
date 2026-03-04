@@ -2,7 +2,7 @@
 
 ## TODO
 
-- rename taxonomies module and controller, create table tenants and store in redis cash external key
+- finish use-case tests for sqlite with migrations
 - transaction outbox
 - infra tests for interfaces
 - log level silent
