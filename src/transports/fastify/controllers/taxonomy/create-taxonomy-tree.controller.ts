@@ -1,9 +1,9 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { diContainer } from '../../../../libs/dependency-injection/index.js';
 import {
-  type CreateTaxonomyTreeDto,
-  CreateTaxonomyTreeHandler,
-  type CreateTaxonomyTreeParams,
+  type CreateTaxonomyDto,
+  CreateTaxonomyHandler,
+  type CreateTaxonomyParams,
 } from '../../../../modules/taxonomy/index.js';
 import type { FastifySuccessResponse } from '../../responses/fastify-success-response.js';
 import type { FastifySchema } from 'fastify/types/schema.js';
@@ -19,14 +19,14 @@ export default (server: FastifyInstance): void => {
   const path: string = '/taxonomy/create-tree';
   const successResponseCode: number = 200;
 
-  const handlerName: string = 'CreateTaxonomyTreeHandler';
-  type HandlerType = CreateTaxonomyTreeHandler;
+  const handlerName: string = 'CreateTaxonomyHandler';
+  type HandlerType = CreateTaxonomyHandler;
 
-  const handlerParamsName: string = 'CreateTaxonomyTreeParams';
-  type HandlerParamsType = CreateTaxonomyTreeParams;
+  const handlerParamsName: string = 'CreateTaxonomyParams';
+  type HandlerParamsType = CreateTaxonomyParams;
 
-  const handlerSuccessResultName: string = 'CreateTaxonomyTreeDto';
-  type HandlerSuccessResultType = CreateTaxonomyTreeDto;
+  const handlerSuccessResultName: string = 'CreateTaxonomyDto';
+  type HandlerSuccessResultType = CreateTaxonomyDto;
 
   const typiaSchemaCollection: IJsonSchemaCollection =
     typia.json.schemas<[HandlerParamsType, FastifySuccessResponse<HandlerSuccessResultType>, FastifyErrorResponse]>();

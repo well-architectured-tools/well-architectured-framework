@@ -38,10 +38,7 @@ function rewriteSchemaRefs(value: unknown, uniqueSchemaId: string): unknown {
   );
 }
 
-function rewriteDefinitionsRefs(
-  definitions: Record<string, unknown>,
-  uniqueSchemaId: string,
-): Record<string, unknown> {
+function rewriteDefinitionsRefs(definitions: Record<string, unknown>, uniqueSchemaId: string): Record<string, unknown> {
   return Object.fromEntries(
     Object.entries(definitions).map((entry: [string, unknown]): [string, unknown] => {
       const [schemaName, schema]: [string, unknown] = entry;
