@@ -10,8 +10,8 @@ export abstract class Entity<Props extends Record<string, any>> {
     this.props = props;
   }
 
-  get id(): string {
-    return this._id.value;
+  get id(): UuidV7 {
+    return this._id;
   }
 
   equals(entity?: Entity<Props> | null): boolean {
@@ -23,6 +23,6 @@ export abstract class Entity<Props extends Record<string, any>> {
       return true;
     }
 
-    return this.id === entity.id;
+    return this.id.equals(entity.id);
   }
 }

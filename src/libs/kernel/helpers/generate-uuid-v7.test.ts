@@ -10,6 +10,6 @@ describe('generateUuidV7', (): void => {
 
   it('should generate UUIDv7 with matcher', (): void => {
     const result: string = generateUuidV7();
-    expect(result).toBeUuidV7();
+    expect(result).toBeUuidV7String();
   });
 });

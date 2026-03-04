@@ -2,8 +2,8 @@ import 'vitest';
 
 declare module 'vitest' {
   interface Assertion<T = unknown> {
-    toBeUuidV4(): void;
-    toBeUuidV7(): void;
+    toBeUuidV4String(): void;
+    toBeUuidV7String(): void;
     toBeISODateTimeString(): void;
   }
 }

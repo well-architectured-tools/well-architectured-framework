@@ -1,8 +1,6 @@
 import { expect } from 'vitest';
 import type { MatcherState } from '@vitest/expect';
-import { isUuidV4 } from './src/libs/kernel/helpers/is-uuid-v4.js';
-import { isUuidV7 } from './src/libs/kernel/helpers/is-uuid-v7.js';
-import { isISODateTimeString } from './src/libs/kernel/helpers/is-iso-date-time-string.js';
+import { isISODateTimeString, isUuidV4, isUuidV7 } from './src/libs/kernel/index.js';
 
 interface ExpectationResult {
   pass: boolean;
@@ -14,14 +12,14 @@ interface ExpectationResult {
 }
 
 expect.extend({
-  toBeUuidV4(received: string, _expected: unknown): ExpectationResult {
+  toBeUuidV4String(received: string, _expected: unknown): ExpectationResult {
     const { isNot }: MatcherState = this;
     return {
       pass: isUuidV4(received),
       message: (): string => `${received} is${isNot ? '' : ' not'} UuidV4`,
     };
   },
-  toBeUuidV7(received: string, _expected: unknown): ExpectationResult {
+  toBeUuidV7String(received: string, _expected: unknown): ExpectationResult {
     const { isNot }: MatcherState = this;
     return {
       pass: isUuidV7(received),
