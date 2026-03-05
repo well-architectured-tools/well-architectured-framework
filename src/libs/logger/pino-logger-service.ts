@@ -81,17 +81,7 @@ export class PinoLoggerService implements LoggerService {
         },
         level: logLevel,
       },
-      test: {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            colorize: true,
-            translateTime: 'SYS:isoTime',
-            ignore: 'pid,hostname',
-          },
-        },
-        level: logLevel,
-      },
+      test: { level: logLevel },
     };
 
     return optionsMap[nodeEnv];

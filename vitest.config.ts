@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 import { NovadiUnplugin } from '@novadi/core/unplugin';
 import type { EnvironmentVariables } from './src/libs/environment/index.js';
@@ -35,6 +36,7 @@ export default defineConfig({
           env: {
             TEST_PROJECT: 'use-case-tests',
             SQLITE_URL: ':memory:',
+            SQLITE_MIGRATIONS_PATH: path.resolve(process.cwd(), 'migrations/sqlite'),
             ...testEnvValues,
           },
           include: ['src/modules/*/interactors/{commands,queries}/*/*.uc-test.ts'],
@@ -52,6 +54,7 @@ export default defineConfig({
           env: {
             TEST_PROJECT: 'infra-tests',
             SQLITE_URL: ':memory:',
+            SQLITE_MIGRATIONS_PATH: path.resolve(process.cwd(), 'migrations/sqlite'),
             ...testEnvValues,
           },
           include: ['src/libs/**/*.infra-test.ts', 'src/modules/*/infrastructure/**/*.infra-test.ts'],

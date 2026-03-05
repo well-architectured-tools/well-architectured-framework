@@ -2,7 +2,6 @@
 
 ## TODO
 
-- finish use-case tests for sqlite with migrations
 - transaction outbox
 - infra tests for interfaces
 - log level silent
