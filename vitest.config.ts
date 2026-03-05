@@ -39,7 +39,7 @@ export default defineConfig({
           },
           include: ['src/modules/*/interactors/{commands,queries}/*/*.uc-test.ts'],
           environment: 'node',
-          setupFiles: ['./vitest.setup.ts', './vitest.sqlite.setup.ts'],
+          setupFiles: ['./vitest.setup.ts'],
           sequence: {
             concurrent: true,
           },
