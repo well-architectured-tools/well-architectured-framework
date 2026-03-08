@@ -1,0 +1,130 @@
+logging {
+	level  = "warn"
+	format = "json"
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+discovery.docker "containers" {
+	host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "add_metadata" {
+	targets = discovery.docker.containers.targets
+
+	rule {
+		source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+		target_label  = "service_name"
+	}
+
+	rule {
+		source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
+		target_label  = "project"
+	}
+
+	rule {
+		source_labels = ["__meta_docker_container_id"]
+		target_label  = "instance_id"
+	}
+}
+
+prometheus.scrape "containers" {
+	targets         = discovery.relabel.add_metadata.output
+	forward_to      = [prometheus.remote_write.default.receiver]
+	scrape_interval = "5s"
+	scrape_timeout  = "5s"
+}
+
+loki.source.docker "docker_logs" {
+	host       = "unix:///var/run/docker.sock"
+	targets    = discovery.relabel.add_metadata.output
+	forward_to = [loki.write.default.receiver]
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+prometheus.exporter.unix "node_exporter" { }
+
+prometheus.scrape "node_exporter" {
+	targets         = prometheus.exporter.unix.node_exporter.targets
+	forward_to      = [prometheus.remote_write.default.receiver]
+	scrape_interval = "5s"
+	scrape_timeout  = "5s"
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+prometheus.remote_write "default" {
+	endpoint {
+		url = "http://prometheus:9090/api/v1/write"
+	}
+}
+
+loki.write "default" {
+	endpoint {
+		url = "http://loki:3100/loki/api/v1/push"
+	}
+}
+
+pyroscope.write "default" {
+	endpoint {
+		url = "http://pyroscope:4040"
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+otelcol.receiver.otlp "default" {
+	grpc {
+		endpoint = "0.0.0.0:4317"
+	}
+
+	http {
+		endpoint = "0.0.0.0:4318"
+	}
+
+	output {
+		metrics = [otelcol.exporter.prometheus.default.input]
+		logs    = [otelcol.exporter.loki.default.input]
+		traces  = [otelcol.exporter.otlp.tempo.input]
+	}
+}
+
+otelcol.exporter.prometheus "default" {
+	forward_to = [prometheus.remote_write.default.receiver]
+}
+
+otelcol.exporter.loki "default" {
+	forward_to = [loki.write.default.receiver]
+}
+
+otelcol.exporter.otlp "tempo" {
+	client {
+		endpoint = "tempo:4317"
+
+		tls {
+			insecure = true
+		}
+	}
+
+	sending_queue {
+		enabled       = true
+		queue_size    = 10000
+		num_consumers = 4
+	}
+
+	retry_on_failure {
+		enabled          = true
+		initial_interval = "1s"
+		max_interval     = "30s"
+		max_elapsed_time = "0s"
+	}
+}
+
+pyroscope.receive_http "default" {
+	http {
+		listen_address = "0.0.0.0"
+		listen_port    = 4319
+	}
+	forward_to = [pyroscope.write.default.receiver]
+}

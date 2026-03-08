@@ -1,4 +1,4 @@
-name: well-architectured-framework
+name: waf-databases
 services:
   postgres:
     image: postgres:18
