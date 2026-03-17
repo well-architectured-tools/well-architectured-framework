@@ -9,4 +9,8 @@ export * from './helpers/is-json-string.js';
 export * from './helpers/is-uuid-v4.js';
 export * from './helpers/is-uuid-v7.js';
 
+export * from './interfaces/repository.js';
+export * from './interfaces/transactional-context.js';
+export * from './interfaces/unit-of-work.js';
+
 export * from './transport.js';

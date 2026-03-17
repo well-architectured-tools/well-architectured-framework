@@ -6,8 +6,8 @@ import { NodeSqliteService } from '../sqlite/index.js';
 import { FastifyTransport } from '../../transports/fastify/index.js';
 import {
   CreateTaxonomyHandler,
-  PostgresTaxonomyWriteGateway,
-  SqliteTaxonomyWriteGateway,
+  PostgresTaxonomyRepository,
+  SqliteTaxonomyRepository,
 } from '../../modules/taxonomy/index.js';
 
 // eslint-disable-next-line no-process-env
@@ -36,9 +36,9 @@ if (!testProject) {
 // TAXONOMY
 builder.registerType(CreateTaxonomyHandler).as('CreateTaxonomyHandler').singleInstance();
 if (!testProject) {
-  builder.registerType(PostgresTaxonomyWriteGateway).as('TaxonomyWriteGateway').singleInstance();
+  builder.registerType(PostgresTaxonomyRepository).as('TaxonomyRepository').singleInstance();
 } else if (testProject === 'use-case-tests') {
-  builder.registerType(SqliteTaxonomyWriteGateway).as('TaxonomyWriteGateway').singleInstance();
+  builder.registerType(SqliteTaxonomyRepository).as('TaxonomyRepository').singleInstance();
 }
 
 export type DiContainer = Container;
