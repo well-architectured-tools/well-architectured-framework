@@ -2,6 +2,7 @@
 
 ## TODO
 
+- finish implement repositories
 - transaction outbox
 - infra tests for interfaces
 - log level silent

@@ -20,8 +20,8 @@
     "use-case-tests": "npm run infra:up && vitest --config ./vitest.config.ts --project use-case-tests",
     "infra-tests": "npm run infra:up && vitest --config ./vitest.config.ts --project infra-tests",
     "e2e-tests": "npm run infra:up && vitest --config ./vitest.config.ts --project e2e-tests",
-    "infra-databases:up": "docker compose -f infra/compose-databases.yaml up -d",
-    "infra-databases:down": "docker compose -f infra/compose-databases.yaml down",
+    "infra:up": "docker compose -f infra/compose-databases.yaml up -d",
+    "infra:down": "docker compose -f infra/compose-databases.yaml down -v",
     "pg-migrations:create": "node-pg-migrate --config-file=migrations/postgres/config.json --database-url-var=POSTGRES_URL create migration",
     "pg-migrations:up": "node-pg-migrate --config-file=migrations/postgres/config.json --database-url-var=POSTGRES_URL up",
     "prepare": "ts-patch install"

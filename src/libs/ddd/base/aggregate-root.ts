@@ -1,7 +1,8 @@
 import { Entity } from './entity.js';
 import { DomainEvent } from './domain-event.js';
 
-export abstract class AggregateRoot<TProps extends Record<string, unknown>> extends Entity<TProps> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export abstract class AggregateRoot<TProps extends Record<string, any>> extends Entity<TProps> {
   protected uncommittedDomainEvents: DomainEvent<unknown>[] = [];
 
   pullDomainEvents(): DomainEvent<unknown>[] {

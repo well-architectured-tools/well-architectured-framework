@@ -1,6 +1,7 @@
 import { UuidV7 } from '../value-objects/uuid-v7.value-object.js';
 
-export abstract class Entity<TProps extends Record<string, unknown>> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export abstract class Entity<TProps extends Record<string, any>> {
   protected readonly _id: UuidV7;
   protected readonly props: TProps;
 

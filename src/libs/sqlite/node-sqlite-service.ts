@@ -1,9 +1,14 @@
 import path from 'node:path';
-import { DatabaseSync, type SQLOutputValue } from 'node:sqlite';
+import { DatabaseSync, type SQLInputValue, type SQLOutputValue } from 'node:sqlite';
 import { readdir, readFile } from 'node:fs/promises';
+import type { TransactionalContext } from '../kernel/index.js';
+import { getEnvVarOrThrow } from '../kernel/index.js';
 import type { SqliteQueryResult, SqliteService, UnknownRecord } from './sqlite-service.js';
 import type { LoggerService } from '../logger/index.js';
-import { getEnvVarOrThrow } from '../kernel/index.js';
+
+export interface NodeSqliteTransactionalContext extends TransactionalContext<DatabaseSync> {
+  readonly provider: 'sqlite';
+}
 
 export class NodeSqliteService implements SqliteService {
   private readonly loggerService: LoggerService;
@@ -77,7 +82,6 @@ export class NodeSqliteService implements SqliteService {
   }
 
   truncateAll(): Promise<void> {
-    const start: number = Date.now();
     const rows: Record<string, SQLOutputValue>[] = this.database
       .prepare(
         `
@@ -97,7 +101,7 @@ export class NodeSqliteService implements SqliteService {
       });
 
     if (tableNames.length === 0) {
-      this.loggerService.info('SQLite truncate all', { duration: Date.now() - start, tableCount: 0 });
+      this.loggerService.info('SQLite truncate all', { tableCount: 0 });
       return Promise.resolve();
     }
 
@@ -115,23 +119,56 @@ export class NodeSqliteService implements SqliteService {
       this.database.exec('PRAGMA foreign_keys = ON;');
     }
 
-    const duration: number = Date.now() - start;
-    this.loggerService.info('SQLite truncate all', { duration, tableNames, tableCount: tableNames.length });
+    this.loggerService.info('SQLite truncate all', { tableNames, tableCount: tableNames.length });
     return Promise.resolve();
   }
 
   query<T extends UnknownRecord>(
     sql: string,
-    values: (number | string)[] = [],
+    values: SQLInputValue[] = [],
+    transactionalContext?: TransactionalContext,
   ): Promise<SqliteQueryResult<T>> {
-    const start: number = Date.now();
-    const result: Record<string, SQLOutputValue>[] = this.database.prepare(sql).all(...values);
-    const duration: number = Date.now() - start;
-    this.loggerService.info('SQLite query', { sql, values, duration, rowCount: result.length });
+    const database: DatabaseSync = this.getDatabase(transactionalContext);
+    const result: Record<string, SQLOutputValue>[] = database.prepare(sql).all(...values);
     return Promise.resolve({ rows: result as T[] });
   }
 
-  getById<T extends UnknownRecord>(tableName: string, id: number | string): Promise<T | null> {
+  async withTransaction<TResult>(
+    operation: (transactionalContext: NodeSqliteTransactionalContext) => Promise<TResult>,
+    existingTransactionalContext?: TransactionalContext,
+  ): Promise<TResult> {
+    if (existingTransactionalContext !== undefined) {
+      const transactionContext: NodeSqliteTransactionalContext =
+        this.assertTransactionContext(existingTransactionalContext);
+      return await operation(transactionContext);
+    }
+
+    const transactionContext: NodeSqliteTransactionalContext = {
+      provider: 'sqlite',
+      transaction: this.database,
+    };
+
+    try {
+      this.database.exec('BEGIN');
+      const result: TResult = await operation(transactionContext);
+      this.database.exec('COMMIT');
+      return result;
+    } catch (error) {
+      try {
+        this.database.exec('ROLLBACK');
+        this.loggerService.warn('SQLite transaction rolled back');
+      } catch (rollbackError) {
+        this.loggerService.error('SQLite transaction rollback failed', { error: rollbackError });
+      }
+      throw error;
+    }
+  }
+
+  getById<T extends UnknownRecord>(
+    tableName: string,
+    id: number | string,
+    transactionalContext?: TransactionalContext,
+  ): Promise<T | null> {
     const escapedTableName: string = this.escapeIdentifier(tableName);
     const sql: string = `
       SELECT *
@@ -139,10 +176,8 @@ export class NodeSqliteService implements SqliteService {
       WHERE id = ?
       LIMIT 1;
     `;
-    const start: number = Date.now();
-    const result: Record<string, SQLOutputValue> | undefined = this.database.prepare(sql).get(id);
-    const duration: number = Date.now() - start;
-    this.loggerService.info('SQLite get by id', { tableName, id, duration, found: result !== undefined });
+    const database: DatabaseSync = this.getDatabase(transactionalContext);
+    const result: Record<string, SQLOutputValue> | undefined = database.prepare(sql).get(id);
     return Promise.resolve((result as T | undefined) ?? null);
   }
 
@@ -164,5 +199,21 @@ export class NodeSqliteService implements SqliteService {
 
   private escapeIdentifier(identifier: string): string {
     return `"${identifier.replaceAll('"', '""')}"`;
+  }
+
+  private getDatabase(transactionalContext?: TransactionalContext): DatabaseSync {
+    if (transactionalContext === undefined) {
+      return this.database;
+    }
+
+    return this.assertTransactionContext(transactionalContext).transaction;
+  }
+
+  private assertTransactionContext(transactionalContext: TransactionalContext): NodeSqliteTransactionalContext {
+    if (transactionalContext.provider !== 'sqlite') {
+      throw new Error(`Expected sqlite transactional context but received ${transactionalContext.provider}`);
+    }
+
+    return transactionalContext as NodeSqliteTransactionalContext;
   }
 }

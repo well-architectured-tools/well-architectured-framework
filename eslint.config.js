@@ -48,6 +48,7 @@ export default defineConfig(
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/prefer-as-const': 'off',
       '@typescript-eslint/non-nullable-type-assertion-style': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/typedef': [
         'error',
         {
