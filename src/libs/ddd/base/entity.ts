@@ -1,11 +1,10 @@
 import { UuidV7 } from '../value-objects/uuid-v7.value-object.js';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export abstract class Entity<Props extends Record<string, any>> {
+export abstract class Entity<TProps extends Record<string, unknown>> {
   protected readonly _id: UuidV7;
-  protected readonly props: Props;
+  protected readonly props: TProps;
 
-  protected constructor(props: Props, id?: UuidV7) {
+  protected constructor(props: TProps, id?: UuidV7) {
     this._id = id ?? UuidV7.createNew();
     this.props = props;
   }
@@ -14,7 +13,7 @@ export abstract class Entity<Props extends Record<string, any>> {
     return this._id;
   }
 
-  equals(entity?: Entity<Props> | null): boolean {
+  equals(entity?: Entity<TProps> | null): boolean {
     if (entity === null || entity === undefined) {
       return false;
     }

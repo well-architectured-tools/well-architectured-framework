@@ -1,13 +1,13 @@
 import { isDeepStrictEqual } from 'node:util';
 
-export abstract class ValueObject<T> {
-  protected readonly props: T;
+export abstract class ValueObject<TProps> {
+  protected readonly props: TProps;
 
-  protected constructor(props: T) {
+  protected constructor(props: TProps) {
     this.props = Object.freeze(props);
   }
 
-  equals(vo?: ValueObject<T> | null): boolean {
+  equals(vo?: ValueObject<TProps> | null): boolean {
     if (vo === null || vo === undefined) {
       return false;
     }

@@ -1,10 +1,10 @@
 import { DateTime } from '../value-objects/date-time.value-object.js';
 
-export abstract class DomainEvent<T> {
+export abstract class DomainEvent<TData> {
   protected readonly _dateTimeOccurred: DateTime;
-  protected readonly eventData: T;
+  protected readonly eventData: TData;
 
-  protected constructor(eventData: T) {
+  protected constructor(eventData: TData) {
     this._dateTimeOccurred = DateTime.createNow();
     this.eventData = Object.freeze(eventData);
   }
