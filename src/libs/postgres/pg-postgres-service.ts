@@ -1,7 +1,12 @@
-import { Pool, type QueryResult } from 'pg';
+import { Pool, type PoolClient, type QueryResult } from 'pg';
+import type { TransactionalContext } from '../kernel/index.js';
 import type { PostgresQueryResult, PostgresService } from './postgres-service.js';
 import type { EnvironmentService } from '../environment/index.js';
 import type { LoggerService } from '../logger/index.js';
+
+export interface PgPostgresTransactionalContext extends TransactionalContext<PoolClient> {
+  readonly provider: 'postgres';
+}
 
 export class PgPostgresService implements PostgresService {
   private readonly loggerService: LoggerService;
@@ -36,15 +41,67 @@ export class PgPostgresService implements PostgresService {
     }
   }
 
-  async query<T extends Record<string, unknown>>(sql: string, values: unknown[] = []): Promise<PostgresQueryResult<T>> {
-    const start: number = Date.now();
-    const result: QueryResult<T> = await this.pool.query<T>(sql, values);
-    const duration: number = Date.now() - start;
-    this.loggerService.info('Postgres query', { sql, values, duration, rowCount: result.rowCount });
+  async query<T extends Record<string, unknown>>(
+    sql: string,
+    values: unknown[] = [],
+    transactionalContext?: TransactionalContext,
+  ): Promise<PostgresQueryResult<T>> {
+    const queryable: Pool | PoolClient = this.getQueryable(transactionalContext);
+    const result: QueryResult<T> = await queryable.query<T>(sql, values);
     return { rows: result.rows };
+  }
+
+  async withTransaction<TResult>(
+    operation: (transactionalContext: PgPostgresTransactionalContext) => Promise<TResult>,
+    existingTransactionalContext?: TransactionalContext,
+  ): Promise<TResult> {
+    if (existingTransactionalContext !== undefined) {
+      const transactionContext: PgPostgresTransactionalContext =
+        this.assertTransactionContext(existingTransactionalContext);
+      return await operation(transactionContext);
+    }
+
+    const client: PoolClient = await this.pool.connect();
+    const transactionContext: PgPostgresTransactionalContext = {
+      provider: 'postgres',
+      transaction: client,
+    };
+
+    try {
+      await client.query('BEGIN');
+      const result: TResult = await operation(transactionContext);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      try {
+        await client.query('ROLLBACK');
+        this.loggerService.warn('Postgres transaction rolled back');
+      } catch (rollbackError) {
+        this.loggerService.error('Postgres transaction rollback failed', { error: rollbackError });
+      }
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   async closeConnection(): Promise<void> {
     await this.pool.end();
+  }
+
+  private getQueryable(transactionalContext?: TransactionalContext): Pool | PoolClient {
+    if (transactionalContext === undefined) {
+      return this.pool;
+    }
+
+    return this.assertTransactionContext(transactionalContext).transaction;
+  }
+
+  private assertTransactionContext(transactionalContext: TransactionalContext): PgPostgresTransactionalContext {
+    if (transactionalContext.provider !== 'postgres') {
+      throw new Error(`Expected postgres transactional context but received ${transactionalContext.provider}`);
+    }
+
+    return transactionalContext as PgPostgresTransactionalContext;
   }
 }

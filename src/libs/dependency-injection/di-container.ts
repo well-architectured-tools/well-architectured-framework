@@ -1,8 +1,8 @@
 import { Builder, Container } from '@novadi/core';
 import { DotenvSafeEnvironmentService } from '../environment/index.js';
 import { PinoLoggerService } from '../logger/index.js';
-import { PgPostgresService, PgPostgresUnitOfWork } from '../postgres/index.js';
-import { NodeSqliteService, NodeSqliteUnitOfWork } from '../sqlite/index.js';
+import { PgPostgresService, PostgresUnitOfWork } from '../postgres/index.js';
+import { NodeSqliteService, SqliteUnitOfWork } from '../sqlite/index.js';
 import { FastifyTransport } from '../../transports/fastify/index.js';
 import {
   CreateTaxonomyHandler,
@@ -21,10 +21,10 @@ builder.registerType(DotenvSafeEnvironmentService).as('EnvironmentService').sing
 builder.registerType(PinoLoggerService).as('LoggerService').singleInstance();
 if (!testProject) {
   builder.registerType(PgPostgresService).as('PostgresService').singleInstance();
-  builder.registerType(PgPostgresUnitOfWork).as('UnitOfWork').singleInstance();
+  builder.registerType(PostgresUnitOfWork).as('UnitOfWork').singleInstance();
 } else if (testProject === 'use-case-tests') {
   builder.registerType(NodeSqliteService).as('SqliteService').singleInstance();
-  builder.registerType(NodeSqliteUnitOfWork).as('UnitOfWork').singleInstance();
+  builder.registerType(SqliteUnitOfWork).as('UnitOfWork').singleInstance();
 } else if (testProject === 'infra-tests') {
   builder.registerType(PgPostgresService).as('PostgresService').singleInstance();
   builder.registerType(NodeSqliteService).as('SqliteService').singleInstance();
