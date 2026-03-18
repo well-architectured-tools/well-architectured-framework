@@ -1,3 +1,3 @@
-export interface OperationHandler<Params, Result> {
-  execute(params: Params): Promise<Result>;
+export interface OperationHandler<TParams, TResult> {
+  execute(params: TParams): Promise<TResult>;
 }

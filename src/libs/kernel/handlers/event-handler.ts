@@ -1,3 +1,3 @@
-export interface EventHandler<Params> {
-  execute(params: Params): Promise<void>;
+export interface EventHandler<TParams> {
+  execute(params: TParams): Promise<void>;
 }
