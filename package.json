@@ -22,8 +22,9 @@
     "e2e-tests": "npm run infra:up && vitest --config ./vitest.config.ts --project e2e-tests",
     "infra:up": "docker compose -f infra/compose-databases.yaml up -d",
     "infra:down": "docker compose -f infra/compose-databases.yaml down -v",
-    "pg-migrations:create": "node-pg-migrate --config-file=migrations/postgres/config.json --database-url-var=POSTGRES_URL create migration",
-    "pg-migrations:up": "node-pg-migrate --config-file=migrations/postgres/config.json --database-url-var=POSTGRES_URL up",
+    "pg-migrations:base": "node-pg-migrate --config-file=migrations/postgres/config.json --database-url-var=POSTGRES_URL",
+    "pg-migrations:create": "npm run pg-migrations:base -- create migration",
+    "pg-migrations:up": "npm run pg-migrations:base -- up",
     "prepare": "ts-patch install"
   },
   "dependencies": {
