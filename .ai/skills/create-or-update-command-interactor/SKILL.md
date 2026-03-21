@@ -12,3 +12,5 @@ To create or update a command use-case.
 3. Create `<command-name>.dto.ts` next to the handler. Write the interface outcome of the command handler in this file.
 4. Write the command handler in the `<command-name>.handler.ts` file.
 5. Make sure you follow project standards for commands to make it consistent with the rest of the project.
+6. Следуй правилам
+- Не добавляй в dto createdAt

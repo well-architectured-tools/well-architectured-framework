@@ -4,7 +4,8 @@ export interface SqliteQueryResult<T> {
   rows: T[];
 }
 
-export type UnknownRecord = Record<string, unknown>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type UnknownRecord = Record<string, any>;
 
 export interface SqliteService {
   isReady(): Promise<boolean>;

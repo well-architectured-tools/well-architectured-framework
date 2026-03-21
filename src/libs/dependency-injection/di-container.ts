@@ -4,11 +4,7 @@ import { PinoLoggerService } from '../logger/index.js';
 import { PgPostgresService, PostgresUnitOfWork } from '../postgres/index.js';
 import { NodeSqliteService, SqliteUnitOfWork } from '../sqlite/index.js';
 import { FastifyTransport } from '../../transports/fastify/index.js';
-import {
-  CreateTaxonomyHandler,
-  PostgresTaxonomyRepository,
-  SqliteTaxonomyRepository,
-} from '../../modules/taxonomy/index.js';
+import { CreateProjectHandler, PostgresProjectRepository, SqliteProjectRepository } from '../../modules/main/index.js';
 
 // eslint-disable-next-line no-process-env
 const testProject: string | undefined = process.env['TEST_PROJECT'];
@@ -35,12 +31,16 @@ if (!testProject) {
   builder.registerType(FastifyTransport).as('Transport').singleInstance();
 }
 
-// TAXONOMY
-builder.registerType(CreateTaxonomyHandler).as('CreateTaxonomyHandler').singleInstance();
+// PROJECT
 if (!testProject) {
-  builder.registerType(PostgresTaxonomyRepository).as('TaxonomyRepository').singleInstance();
+  builder.registerType(CreateProjectHandler).as('CreateProjectHandler').singleInstance();
+  builder.registerType(PostgresProjectRepository).as('ProjectRepository').singleInstance();
 } else if (testProject === 'use-case-tests') {
-  builder.registerType(SqliteTaxonomyRepository).as('TaxonomyRepository').singleInstance();
+  builder.registerType(CreateProjectHandler).as('CreateProjectHandler').singleInstance();
+  builder.registerType(SqliteProjectRepository).as('ProjectRepository').singleInstance();
+} else if (testProject === 'infra-tests') {
+  builder.registerType(PostgresProjectRepository).as('PostgresProjectRepository').singleInstance();
+  builder.registerType(SqliteProjectRepository).as('SqliteProjectRepository').singleInstance();
 }
 
 export type DiContainer = Container;

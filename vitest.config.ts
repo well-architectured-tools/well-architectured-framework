@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 import { NovadiUnplugin } from '@novadi/core/unplugin';
+import UnpluginTypia from '@typia/unplugin/vite';
 import type { EnvironmentVariables } from './src/libs/environment/index.js';
 
 const testEnvValues: { NODE_OPTIONS: string } & Record<keyof EnvironmentVariables, string> = {
@@ -30,7 +31,7 @@ export default defineConfig({
         },
       },
       {
-        plugins: [NovadiUnplugin.vite({ enableAutowiring: true })],
+        plugins: [NovadiUnplugin.vite({ enableAutowiring: true }), UnpluginTypia({})],
         test: {
           name: 'use-case-tests',
           env: {
@@ -48,7 +49,7 @@ export default defineConfig({
         },
       },
       {
-        plugins: [NovadiUnplugin.vite({ enableAutowiring: true })],
+        plugins: [NovadiUnplugin.vite({ enableAutowiring: true }), UnpluginTypia({})],
         test: {
           name: 'infra-tests',
           env: {

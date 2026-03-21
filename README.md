@@ -4,6 +4,7 @@
 
 - finish implement repositories
 - transaction outbox
+- idempotency
 - infra tests for interfaces
 - log level silent
 - migrations and seeds before start
@@ -17,3 +18,5 @@
 - RBAC
 - mcp transport
 - helm and deploy to k8s
+- AGENTS.md and SKILLS
+- feature flags

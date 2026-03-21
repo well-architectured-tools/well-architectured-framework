@@ -1,16 +1,16 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { CreateTaxonomyHandler } from './create-taxonomy.handler.js';
 import { diContainer } from '../../../../../libs/dependency-injection/index.js';
 import type { SqliteService, UnknownRecord } from '../../../../../libs/sqlite/index.js';
-import type { CreateTaxonomyParams } from './create-taxonomy.params.js';
-import type { CreateTaxonomyDto } from './create-taxonomy.dto.js';
+import { CreateProjectHandler } from './create-project.handler.js';
+import type { CreateProjectParams } from './create-project.params.js';
+import type { CreateProjectDto } from './create-project.dto.js';
 
-describe('CreateTaxonomyHandler', (): void => {
-  let handler: CreateTaxonomyHandler;
+describe('CreateProjectHandler', (): void => {
+  let handler: CreateProjectHandler;
   let sqliteService: SqliteService;
 
   beforeAll(async (): Promise<void> => {
-    handler = diContainer.resolveType('CreateTaxonomyHandler');
+    handler = diContainer.resolveType('CreateProjectHandler');
     sqliteService = diContainer.resolveType('SqliteService');
     await sqliteService.migrate();
   });
@@ -24,27 +24,26 @@ describe('CreateTaxonomyHandler', (): void => {
   });
 
   it('should success', async (): Promise<void> => {
-    const params: CreateTaxonomyParams = {
+    const params: CreateProjectParams = {
       name: 'test',
     };
 
-    const result: CreateTaxonomyDto = await handler.execute(params);
+    const result: CreateProjectDto = await handler.execute(params);
     expect(result.id).toBeUuidV7String();
     expect(result).toStrictEqual({
       id: expect.any(String),
       name: params.name,
     });
 
-    const savedTaxonomy: UnknownRecord | null = await sqliteService.getById<UnknownRecord>('taxonomies', result.id);
-    if (savedTaxonomy === null) {
-      throw new Error('Expected taxonomy to be saved in SQLite');
+    const savedItem: UnknownRecord | null = await sqliteService.getById<UnknownRecord>('project', result.id);
+    if (savedItem === null) {
+      throw new Error('Expected savedItem to be saved in SQLite');
     }
-    expect(savedTaxonomy['created_at']).toBeISODateTimeString();
-    expect({ ...savedTaxonomy }).toStrictEqual({
+    expect(savedItem['created_at']).toBeISODateTimeString();
+    expect({ ...savedItem }).toStrictEqual({
       id: result.id,
       name: result.name,
       created_at: expect.any(String),
-      parent_id: null,
     });
   });
 });

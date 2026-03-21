@@ -1,9 +1,9 @@
 import { TypeGuardError } from 'typia';
 import { ApplicationError } from './application-error.js';
 
-export function handleGatewayError(error: unknown): void {
+export function handleDataError(error: unknown): never {
   if (error instanceof TypeGuardError) {
-    throw new ApplicationError('UNEXPECTED', 'GATEWAY_RESPONSE_VALIDATION_ERROR', 'Invalid gateway response schema', {
+    throw new ApplicationError('UNEXPECTED', 'DATA_VALIDATION_ERROR', 'Invalid data schema', {
       details: {
         path: error.path,
         expected: error.expected,
@@ -12,7 +12,7 @@ export function handleGatewayError(error: unknown): void {
       cause: error,
     });
   } else if (error instanceof Error) {
-    throw new ApplicationError('UNEXPECTED', 'GATEWAY_ERROR', error.message, {
+    throw new ApplicationError('UNEXPECTED', 'DATA_ERROR', error.message, {
       cause: error,
     });
   } else {

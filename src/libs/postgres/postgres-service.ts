@@ -7,7 +7,8 @@ export interface PostgresQueryResult<T> {
 export interface PostgresService {
   isReady(): Promise<boolean>;
 
-  query<T extends Record<string, unknown>>(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  query<T extends Record<string, any>>(
     sql: string,
     values?: (number | string)[],
     transactionalContext?: TransactionalContext,

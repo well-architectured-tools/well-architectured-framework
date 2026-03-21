@@ -37,7 +37,7 @@
     "fastify": "^5.8.2",
     "pg": "^8.18.0",
     "pino": "^10.3.0",
-    "typia": "^11.0.3",
+    "typia": "^12.0.1",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
@@ -50,6 +50,7 @@
     "@types/pg": "^8.16.0",
     "@typescript-eslint/eslint-plugin": "^8.51.0",
     "@typescript-eslint/parser": "^8.51.0",
+    "@typia/unplugin": "^12.0.1",
     "@well-architectured-tools/prettier-config": "^1.0.1",
     "eslint": "^9.39.2",
     "eslint-import-resolver-typescript": "^4.4.4",

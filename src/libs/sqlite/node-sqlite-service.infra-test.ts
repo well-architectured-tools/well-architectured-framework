@@ -26,25 +26,25 @@ describe('NodeSqliteService', (): void => {
       SELECT name
       FROM sqlite_master
       WHERE type = 'table'
-        AND name = 'taxonomies';
+        AND name = 'project';
     `);
     expect(result.rows).toHaveLength(1);
-    expect(result.rows[0]?.name).toBe('taxonomies');
+    expect(result.rows[0]?.name).toBe('project');
   });
 
   it('should truncate all tables except migrations', async (): Promise<void> => {
     await service.migrate();
     await service.query(
       `
-        INSERT INTO taxonomies (id, name)
-        VALUES (?, ?);
+        INSERT INTO project (id, name, created_at)
+        VALUES (?, ?, ?);
       `,
-      ['test-taxonomy-id', 'taxonomy'],
+      ['019d1175-f8aa-76a8-af9d-b74da9d08b39', 'some-project', '2026-03-21T19:24:31.434Z'],
     );
 
     const before: SqliteQueryResult<{ count: number }> = await service.query(`
       SELECT count(*) AS count
-      FROM taxonomies;
+      FROM project;
     `);
     expect(before.rows[0]?.count).toBe(1);
 
@@ -52,7 +52,7 @@ describe('NodeSqliteService', (): void => {
 
     const afterTruncate: SqliteQueryResult<{ count: number }> = await service.query(`
       SELECT count(*) AS count
-      FROM taxonomies;
+      FROM project;
     `);
     const migrationsCount: SqliteQueryResult<{ count: number }> = await service.query(`
       SELECT count(*) AS count
@@ -87,21 +87,26 @@ describe('NodeSqliteService', (): void => {
     await service.truncateAll();
     await service.query(
       `
-        INSERT INTO taxonomies (id, name)
-        VALUES (?, ?);
+        INSERT INTO project (id, name, created_at)
+        VALUES (?, ?, ?);
       `,
-      ['taxonomy-id', 'taxonomy'],
+      ['019d1175-f8aa-7b05-a2f4-3752e60a5b28', 'another-project', '2026-03-21T19:24:31.434Z'],
     );
 
-    const savedTaxonomy: UnknownRecord | null = await service.getById<UnknownRecord>('taxonomies', 'taxonomy-id');
-    expect(savedTaxonomy).toMatchObject({
-      id: 'taxonomy-id',
-      name: 'taxonomy',
+    const savedProject: UnknownRecord | null = await service.getById<UnknownRecord>(
+      'project',
+      '019d1175-f8aa-7b05-a2f4-3752e60a5b28',
+    );
+    expect(savedProject).toMatchObject({
+      id: '019d1175-f8aa-7b05-a2f4-3752e60a5b28',
+      name: 'another-project',
       created_at: expect.any(String),
-      parent_id: null,
     });
 
-    const missingTaxonomy: UnknownRecord | null = await service.getById<UnknownRecord>('taxonomies', 'missing-id');
-    expect(missingTaxonomy).toBeNull();
+    const missingProject: UnknownRecord | null = await service.getById<UnknownRecord>(
+      'project',
+      '019d1175-f8aa-7018-8aea-c45cf81769ff',
+    );
+    expect(missingProject).toBeNull();
   });
 });
