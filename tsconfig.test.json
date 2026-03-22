@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist/test",
+    "tsBuildInfoFile": "dist/.tmp/test/tsconfig.build.tsbuildinfo"
+  },
+  "include": [
+    "src/**/*.ts",
+    "vitest.d.ts"
+  ],
+  "watchOptions": {
+    "excludeDirectories": ["dist"]
+  }
+}

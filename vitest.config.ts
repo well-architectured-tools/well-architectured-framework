@@ -1,17 +1,6 @@
-import path from 'node:path';
 import { defineConfig } from 'vitest/config';
 import { NovadiUnplugin } from '@novadi/core/unplugin';
 import UnpluginTypia from '@typia/unplugin/vite';
-import type { EnvironmentVariables } from './src/libs/environment/index.js';
-
-const testEnvValues: { NODE_OPTIONS: string } & Record<keyof EnvironmentVariables, string> = {
-  NODE_OPTIONS: '--disable-warning=ExperimentalWarning',
-  LOAD_DOTENV: 'false',
-  NODE_ENV: 'test',
-  LOG_LEVEL: 'warn',
-  PORT: '3000',
-  POSTGRES_URL: 'postgres://postgres:postgres@localhost:5555/postgres',
-};
 
 export default defineConfig({
   test: {
@@ -23,11 +12,23 @@ export default defineConfig({
         test: {
           name: 'unit-tests',
           include: ['src/**/*.test.ts'],
-          environment: 'node',
           setupFiles: ['./vitest.setup.ts'],
-          sequence: {
-            concurrent: true,
+        },
+      },
+      {
+        test: {
+          name: 'infra-tests',
+          include: ['dist/test/modules/*/infrastructure/**/*.infra-test.js'],
+          globalSetup: ['./vitest.global-setup.ts'],
+          setupFiles: ['./vitest.setup.ts'],
+          env: {
+            TEST_PROJECT: 'infra-tests',
+            NODE_ENV: 'test',
+            LOG_LEVEL: 'warn',
+            POSTGRES_URL: 'postgres://postgres:postgres@localhost:5556/postgres',
           },
+          mockReset: true,
+          fileParallelism: false,
         },
       },
       {
@@ -36,34 +37,11 @@ export default defineConfig({
           name: 'use-case-tests',
           env: {
             TEST_PROJECT: 'use-case-tests',
-            SQLITE_URL: ':memory:',
-            SQLITE_MIGRATIONS_PATH: path.resolve(process.cwd(), 'migrations/sqlite'),
-            ...testEnvValues,
+            NODE_OPTIONS: '--disable-warning=ExperimentalWarning',
           },
           include: ['src/modules/*/interactors/{commands,queries}/*/*.uc-test.ts'],
           environment: 'node',
           setupFiles: ['./vitest.setup.ts'],
-          sequence: {
-            concurrent: true,
-          },
-        },
-      },
-      {
-        plugins: [NovadiUnplugin.vite({ enableAutowiring: true }), UnpluginTypia({})],
-        test: {
-          name: 'infra-tests',
-          env: {
-            TEST_PROJECT: 'infra-tests',
-            SQLITE_URL: ':memory:',
-            SQLITE_MIGRATIONS_PATH: path.resolve(process.cwd(), 'migrations/sqlite'),
-            ...testEnvValues,
-          },
-          include: ['src/libs/**/*.infra-test.ts', 'src/modules/*/infrastructure/**/*.infra-test.ts'],
-          environment: 'node',
-          setupFiles: ['./vitest.setup.ts'],
-          sequence: {
-            concurrent: false,
-          },
         },
       },
       {
@@ -72,8 +50,8 @@ export default defineConfig({
           name: 'e2e-tests',
           env: {
             TEST_PROJECT: 'e2e-tests',
-            E2E_BASE_URL: process.env['E2E_BASE_URL'] ?? `http://localhost:${testEnvValues.PORT}`,
-            ...testEnvValues,
+            NODE_OPTIONS: '--disable-warning=ExperimentalWarning',
+            E2E_BASE_URL: process.env['E2E_BASE_URL'] ?? `http://localhost:4000`,
           },
           include: ['src/transports/*/e2e/**/*.e2e-test.ts'],
           environment: 'node',

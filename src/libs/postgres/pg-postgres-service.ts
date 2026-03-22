@@ -99,7 +99,7 @@ export class PgPostgresService implements PostgresService {
 
   private assertTransactionContext(transactionalContext: TransactionalContext): PgPostgresTransactionalContext {
     if (transactionalContext.provider !== 'postgres') {
-      throw new Error(`Expected postgres transactional context but received ${transactionalContext.provider}`);
+      throw new Error(`Expected postgres transactional context but received "${transactionalContext.provider}"`);
     }
 
     return transactionalContext as PgPostgresTransactionalContext;

@@ -1,10 +1,9 @@
 import { Builder, Container } from '@novadi/core';
-import { DotenvSafeEnvironmentService } from '../environment/index.js';
+import { DotenvSafeEnvironmentService, SimpleEnvironmentService } from '../environment/index.js';
 import { PinoLoggerService } from '../logger/index.js';
 import { PgPostgresService, PostgresUnitOfWork } from '../postgres/index.js';
-import { NodeSqliteService, SqliteUnitOfWork } from '../sqlite/index.js';
 import { FastifyTransport } from '../../transports/fastify/index.js';
-import { CreateProjectHandler, PostgresProjectRepository, SqliteProjectRepository } from '../../modules/main/index.js';
+import { CreateProjectHandler, PostgresProjectRepository } from '../../modules/main/index.js';
 
 // eslint-disable-next-line no-process-env
 const testProject: string | undefined = process.env['TEST_PROJECT'];
@@ -13,17 +12,15 @@ const container: Container = new Container();
 const builder: Builder = container.builder();
 
 // LIBRARY SERVICES
-builder.registerType(DotenvSafeEnvironmentService).as('EnvironmentService').singleInstance();
-builder.registerType(PinoLoggerService).as('LoggerService').singleInstance();
 if (!testProject) {
-  builder.registerType(PgPostgresService).as('PostgresService').singleInstance();
+  builder.registerType(DotenvSafeEnvironmentService).as('EnvironmentService').singleInstance();
+  builder.registerType(PinoLoggerService).as('LoggerService').singleInstance();
   builder.registerType(PostgresUnitOfWork).as('UnitOfWork').singleInstance();
-} else if (testProject === 'use-case-tests') {
-  builder.registerType(NodeSqliteService).as('SqliteService').singleInstance();
-  builder.registerType(SqliteUnitOfWork).as('UnitOfWork').singleInstance();
-} else if (testProject === 'infra-tests') {
   builder.registerType(PgPostgresService).as('PostgresService').singleInstance();
-  builder.registerType(NodeSqliteService).as('SqliteService').singleInstance();
+} else if (testProject === 'infra-tests') {
+  builder.registerType(SimpleEnvironmentService).as('EnvironmentService').singleInstance();
+  builder.registerType(PinoLoggerService).as('LoggerService').singleInstance();
+  builder.registerType(PgPostgresService).as('PostgresService').singleInstance();
 }
 
 // TRANSPORT
@@ -33,14 +30,13 @@ if (!testProject) {
 
 // PROJECT
 if (!testProject) {
-  builder.registerType(CreateProjectHandler).as('CreateProjectHandler').singleInstance();
   builder.registerType(PostgresProjectRepository).as('ProjectRepository').singleInstance();
-} else if (testProject === 'use-case-tests') {
   builder.registerType(CreateProjectHandler).as('CreateProjectHandler').singleInstance();
-  builder.registerType(SqliteProjectRepository).as('ProjectRepository').singleInstance();
 } else if (testProject === 'infra-tests') {
   builder.registerType(PostgresProjectRepository).as('PostgresProjectRepository').singleInstance();
-  builder.registerType(SqliteProjectRepository).as('SqliteProjectRepository').singleInstance();
+} else if (testProject === 'use-case-tests') {
+  builder.registerType(PostgresProjectRepository).as('ProjectRepository').singleInstance();
+  builder.registerType(CreateProjectHandler).as('CreateProjectHandler').singleInstance();
 }
 
 export type DiContainer = Container;

@@ -1,4 +1,4 @@
-import type { IJsonSchemaCollection } from 'typia/src/schemas/json/IJsonSchemaCollection.js';
+import type { IJsonSchemaCollection } from 'typia';
 import type { FastifyInstance } from 'fastify';
 
 const SCHEMA_REF_PREFIX: string = '#/components/schemas/';

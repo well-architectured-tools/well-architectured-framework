@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist/server"
+    "outDir": "dist/server",
+    "tsBuildInfoFile": "dist/.tmp/server/tsconfig.build.tsbuildinfo"
   },
   "include": [
     "src/**/*.ts"
@@ -12,5 +13,8 @@
     "src/**/*.uc-test.ts",
     "src/**/*.infra-test.ts",
     "src/**/*.e2e-test.ts"
-  ]
+  ],
+  "watchOptions": {
+    "excludeDirectories": ["dist"]
+  }
 }

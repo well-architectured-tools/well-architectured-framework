@@ -1,32 +1,31 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { diContainer } from '../../../../libs/dependency-injection/index.js';
-import {
-  type CreateTaxonomyDto,
-  CreateTaxonomyHandler,
-  type CreateTaxonomyParams,
-} from '../../../../modules/taxonomy/index.js';
 import type { FastifySuccessResponse } from '../../responses/fastify-success-response.js';
 import type { FastifySchema } from 'fastify/types/schema.js';
 import type { FastifyErrorResponse } from '../../responses/fastify-error-response.js';
 import { addTypiaAsJsonSchema } from '../../helpers/add-typia-as-json-schema.js';
-import type { IJsonSchemaCollection } from 'typia/src/schemas/json/IJsonSchemaCollection.js';
-import typia from 'typia';
+import typia, { type IJsonSchemaCollection } from 'typia';
 import type { _HTTPMethods } from 'fastify/types/utils.js';
 import { handleResponseValidationError } from '../../helpers/handle-response-validation-error.js';
+import {
+  type CreateProjectDto,
+  CreateProjectHandler,
+  type CreateProjectParams,
+} from '../../../../modules/main/index.js';
 
 export default (server: FastifyInstance): void => {
   const method: Lowercase<_HTTPMethods> = 'post';
-  const path: string = '/taxonomy/create-taxonomy';
+  const path: string = '/main/create-project';
   const successResponseCode: number = 200;
 
-  const handlerName: string = 'CreateTaxonomyHandler';
-  type HandlerType = CreateTaxonomyHandler;
+  const handlerName: string = 'CreateProjectHandler';
+  type HandlerType = CreateProjectHandler;
 
-  const handlerParamsName: string = 'CreateTaxonomyParams';
-  type HandlerParamsType = CreateTaxonomyParams;
+  const handlerParamsName: string = 'CreateProjectParams';
+  type HandlerParamsType = CreateProjectParams;
 
-  const handlerSuccessResultName: string = 'CreateTaxonomyDto';
-  type HandlerSuccessResultType = CreateTaxonomyDto;
+  const handlerSuccessResultName: string = 'CreateProjectDto';
+  type HandlerSuccessResultType = CreateProjectDto;
 
   const typiaSchemaCollection: IJsonSchemaCollection =
     typia.json.schemas<[HandlerParamsType, FastifySuccessResponse<HandlerSuccessResultType>, FastifyErrorResponse]>();

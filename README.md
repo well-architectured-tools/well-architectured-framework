@@ -2,10 +2,8 @@
 
 ## TODO
 
-- finish implement repositories
 - transaction outbox
 - idempotency
-- infra tests for interfaces
 - log level silent
 - migrations and seeds before start
 - openapi and schema dont repeat ErrorResponse
