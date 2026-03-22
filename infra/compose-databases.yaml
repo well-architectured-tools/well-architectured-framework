@@ -21,5 +21,16 @@ services:
       timeout: 2s
       retries: 30
       start_period: 2s
+  postgres-migrations:
+    image: node:24.14-bookworm-slim
+    working_dir: /workspace
+    volumes:
+      - ..:/workspace
+    environment:
+      POSTGRES_URL: 'postgres://postgres:postgres@postgres:5432/postgres'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ['npm', 'run', 'pg-migrations:up']
 volumes:
   postgres-storage:
