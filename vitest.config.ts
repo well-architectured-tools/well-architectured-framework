@@ -1,6 +1,5 @@
 import { defineConfig } from 'vitest/config';
 import { NovadiUnplugin } from '@novadi/core/unplugin';
-import UnpluginTypia from '@typia/unplugin/vite';
 
 export default defineConfig({
   test: {
@@ -13,6 +12,11 @@ export default defineConfig({
           name: 'unit-tests',
           include: ['src/**/*.test.ts'],
           setupFiles: ['./vitest.setup.ts'],
+          env: {
+            NODE_ENV: 'test',
+          },
+          mockReset: true,
+          fileParallelism: true,
         },
       },
       {
@@ -32,16 +36,19 @@ export default defineConfig({
         },
       },
       {
-        plugins: [NovadiUnplugin.vite({ enableAutowiring: true }), UnpluginTypia({})],
         test: {
           name: 'use-case-tests',
+          include: ['src/modules/*/interactors/{commands,queries,reactions}/*/*.uc-test.ts'],
+          globalSetup: ['./vitest.global-setup.ts'],
+          setupFiles: ['./vitest.setup.ts'],
           env: {
             TEST_PROJECT: 'use-case-tests',
-            NODE_OPTIONS: '--disable-warning=ExperimentalWarning',
+            NODE_ENV: 'test',
+            LOG_LEVEL: 'warn',
+            POSTGRES_URL: 'postgres://postgres:postgres@localhost:5556/postgres',
           },
-          include: ['src/modules/*/interactors/{commands,queries}/*/*.uc-test.ts'],
-          environment: 'node',
-          setupFiles: ['./vitest.setup.ts'],
+          mockReset: true,
+          fileParallelism: false,
         },
       },
       {

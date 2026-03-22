@@ -15,12 +15,13 @@ const builder: Builder = container.builder();
 if (!testProject) {
   builder.registerType(DotenvSafeEnvironmentService).as('EnvironmentService').singleInstance();
   builder.registerType(PinoLoggerService).as('LoggerService').singleInstance();
-  builder.registerType(PostgresUnitOfWork).as('UnitOfWork').singleInstance();
   builder.registerType(PgPostgresService).as('PostgresService').singleInstance();
-} else if (testProject === 'infra-tests') {
+  builder.registerType(PostgresUnitOfWork).as('UnitOfWork').singleInstance();
+} else if (['infra-tests', 'use-case-tests'].includes(testProject)) {
   builder.registerType(SimpleEnvironmentService).as('EnvironmentService').singleInstance();
   builder.registerType(PinoLoggerService).as('LoggerService').singleInstance();
   builder.registerType(PgPostgresService).as('PostgresService').singleInstance();
+  builder.registerType(PostgresUnitOfWork).as('UnitOfWork').singleInstance();
 }
 
 // TRANSPORT
