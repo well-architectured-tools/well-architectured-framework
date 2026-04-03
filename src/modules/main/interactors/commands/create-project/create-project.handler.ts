@@ -4,7 +4,7 @@ import type { ProjectRepository } from '../../shared/project/project.repository.
 import type { CreateProjectParams } from './create-project.params.js';
 import type { CreateProjectDto } from './create-project.dto.js';
 import { Project } from '../../../domain/aggregates/project.aggregate.js';
-import { ProjectMapper } from '../../shared/project/project.mapper.js';
+import { ProjectDtoMapper } from '../../shared/project/project.dto-mapper.js';
 
 export class CreateProjectHandler implements OperationHandler<CreateProjectParams, CreateProjectDto> {
   private readonly unitOfWork: UnitOfWork;
@@ -21,7 +21,7 @@ export class CreateProjectHandler implements OperationHandler<CreateProjectParam
         async (transactionalContext: TransactionalContext): Promise<CreateProjectDto> => {
           const project: Project = Project.create({ name: params.name });
           await this.projectRepository.save(project, transactionalContext);
-          return ProjectMapper.toDto(project);
+          return ProjectDtoMapper.toDto(project);
         },
       );
     } catch (error) {

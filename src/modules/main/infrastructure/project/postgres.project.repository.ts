@@ -3,8 +3,8 @@ import type { PostgresQueryResult, PostgresService } from '../../../../libs/post
 import { UuidV7 } from '../../../../libs/ddd/index.js';
 import type { TransactionalContext } from '../../../../libs/kernel/index.js';
 import type { Project } from '../../domain/aggregates/project.aggregate.js';
-import { ProjectMapper } from '../../interactors/shared/project/project.mapper.js';
-import type { ProjectData } from '../../interactors/shared/project/project.data.js';
+import { PostgresProjectPersistenceMapper } from './postgres.project.persistence-mapper.js';
+import type { PostgresProjectPersistence } from './postgres.project.persistence.js';
 import typia from 'typia';
 import { handleDataError } from '../../../../libs/errors/index.js';
 
@@ -17,7 +17,7 @@ export class PostgresProjectRepository implements ProjectRepository {
 
   async getById(id: UuidV7, transactionalContext?: TransactionalContext): Promise<Project | null> {
     try {
-      const queryResult: PostgresQueryResult<ProjectData> = await this.postgresService.query(
+      const queryResult: PostgresQueryResult<PostgresProjectPersistence> = await this.postgresService.query(
         `
         SELECT id, name, created_at
         FROM waf.project
@@ -27,15 +27,15 @@ export class PostgresProjectRepository implements ProjectRepository {
         transactionalContext,
       );
 
-      const data: ProjectData | undefined = queryResult.rows[0];
+      const data: PostgresProjectPersistence | undefined = queryResult.rows[0];
 
       if (data === undefined) {
         return null;
       }
 
-      typia.assert<ProjectData>(data);
+      typia.assert<PostgresProjectPersistence>(data);
 
-      return ProjectMapper.toDomain(data);
+      return PostgresProjectPersistenceMapper.toDomain(data);
     } catch (error) {
       handleDataError(error);
     }

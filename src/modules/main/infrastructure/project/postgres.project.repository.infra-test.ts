@@ -4,24 +4,24 @@ import { diContainer } from '../../../../libs/dependency-injection/index.js';
 import type { PostgresService } from '../../../../libs/postgres/index.js';
 import { Project } from '../../domain/aggregates/project.aggregate.js';
 import { ApplicationError } from '../../../../libs/errors/index.js';
-import type { ProjectData } from '../../interactors/shared/project/project.data.js';
+import type { PostgresProjectPersistence } from './postgres.project.persistence.js';
 import { DateTime, UuidV7 } from '../../../../libs/ddd/index.js';
 
 describe('PostgresProjectRepository', (): void => {
   let service: PostgresProjectRepository;
   let postgresService: PostgresService;
 
-  const project1: ProjectData = {
+  const project1: PostgresProjectPersistence = {
     id: '019d1165-f314-736f-8f26-364f5f05e5d7',
     name: 'First',
     created_at: new Date('2026-01-21T17:17:15.730Z'),
   };
-  const project2: ProjectData = {
+  const project2: PostgresProjectPersistence = {
     id: '019d1165-f314-7ab3-ac6c-f576c2bd4bdc',
     name: 'Second',
     created_at: new Date('2026-02-21T17:17:26.345Z'),
   };
-  const project3: ProjectData = {
+  const project3: PostgresProjectPersistence = {
     id: '019d1165-f314-7dc9-a78d-d15406ddaf9e',
     name: 'Third',
     created_at: new Date('2026-03-21T17:17:36.477Z'),
@@ -75,7 +75,7 @@ describe('PostgresProjectRepository', (): void => {
             // @ts-expect-error intentionally invalid type: name must be string — this should never happen at runtime
             name: 777,
             created_at: project2.created_at,
-          } satisfies ProjectData,
+          } satisfies PostgresProjectPersistence,
         ],
       });
 
