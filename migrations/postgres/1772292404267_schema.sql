@@ -1,1 +1,1 @@
-create schema waf;
+create schema main;

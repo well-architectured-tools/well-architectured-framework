@@ -1,4 +1,4 @@
-CREATE TABLE waf.project
+CREATE TABLE main.project
 (
   id         UUID        NOT NULL,
   name       TEXT        NOT NULL,
