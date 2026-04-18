@@ -20,3 +20,6 @@
 - helm and deploy to k8s
 - AGENTS.md and SKILLS
 - feature flags
+- фоновые джобы / delayed jobs / temporal?
+- distributed locks / leader election
+- circuit breaker / timeout policy - retry, backoff, “для вызовов сервиса X timeout 800ms, 2 retries, circuit breaker на 30 секунд”

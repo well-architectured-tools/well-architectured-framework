@@ -30,14 +30,11 @@ if (!testProject) {
 }
 
 // PROJECT
-if (!testProject) {
+if (!testProject || testProject === 'use-case-tests') {
   builder.registerType(PostgresProjectRepository).as('ProjectRepository').singleInstance();
   builder.registerType(CreateProjectHandler).as('CreateProjectHandler').singleInstance();
 } else if (testProject === 'infra-tests') {
   builder.registerType(PostgresProjectRepository).as('PostgresProjectRepository').singleInstance();
-} else if (testProject === 'use-case-tests') {
-  builder.registerType(PostgresProjectRepository).as('ProjectRepository').singleInstance();
-  builder.registerType(CreateProjectHandler).as('CreateProjectHandler').singleInstance();
 }
 
 export type DiContainer = Container;

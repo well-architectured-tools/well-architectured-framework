@@ -38,7 +38,7 @@ export default defineConfig({
       {
         test: {
           name: 'use-case-tests',
-          include: ['src/modules/*/interactors/{commands,queries,reactions}/*/*.uc-test.ts'],
+          include: ['dist/test/modules/*/interactors/{commands,queries,reactions}/*/*.uc-test.js'],
           globalSetup: ['./vitest.global-setup.ts'],
           setupFiles: ['./vitest.setup.ts'],
           env: {
