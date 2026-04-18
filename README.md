@@ -3,8 +3,6 @@
 ## TODO
 
 - in libs create service-2-service folder with, for example, users-to-main
-- e2e tests
-- move HttpClient to libs 
 - transaction outbox
 - idempotency
 - Optimistic Concurrency Control - version колонка, updated_at/etag-based conditional update, compare-and-swap. Чтобы не ловить lost update. Для HTTP это красиво ложится на: ETag, If-Match

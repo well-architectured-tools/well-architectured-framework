@@ -9,6 +9,7 @@ export * from './errors/wrap-error-to-application-error-and-throw.js';
 export * from './helpers/generate-uuid-v4.js';
 export * from './helpers/generate-uuid-v7.js';
 export * from './helpers/get-env-var-or-throw.js';
+export * from './helpers/get-env-var-or-default.js';
 export * from './helpers/is-iso-date-time-string.js';
 export * from './helpers/is-json-string.js';
 export * from './helpers/is-uuid-v4.js';

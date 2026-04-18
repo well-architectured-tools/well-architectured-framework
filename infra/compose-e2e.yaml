@@ -1,0 +1,30 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    environment:
+      LOAD_DOTENV: '${LOAD_DOTENV}'
+      NODE_ENV: '${NODE_ENV}'
+      LOG_LEVEL: '${LOG_LEVEL}'
+      PORT: '${PORT}'
+      POSTGRES_URL: '${POSTGRES_URL}'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      postgres-migrations:
+        condition: service_completed_successfully
+    ports:
+      - '${PORT}:${PORT}'
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '--eval',
+          "fetch('http://127.0.0.1:' + process.env.PORT + '/readyz').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+      start_period: 5s

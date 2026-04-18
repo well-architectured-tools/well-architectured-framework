@@ -11,6 +11,7 @@ export async function setup(): Promise<void> {
     .withEnvironment({ POSTGRES_PORT: '5556' })
     .withWaitStrategy('postgres-1', Wait.forHealthCheck())
     .withWaitStrategy('postgres-migrations-1', Wait.forOneShotStartup().withStartupTimeout(60_000))
+    .withStartupTimeout(300_000)
     .up();
 }
 

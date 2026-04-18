@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitest/config';
-import { NovadiUnplugin } from '@novadi/core/unplugin';
+import { e2eVitestEnvironment } from './vitest.e2e.environment.js';
 
 export default defineConfig({
   test: {
@@ -23,7 +23,7 @@ export default defineConfig({
         test: {
           name: 'infra-tests',
           include: ['dist/test/modules/*/infrastructure/**/*.infra-test.js'],
-          globalSetup: ['./vitest.global-setup.ts'],
+          globalSetup: ['./vitest.databases.global-setup.ts'],
           setupFiles: ['./vitest.setup.ts'],
           env: {
             TEST_PROJECT: 'infra-tests',
@@ -39,7 +39,7 @@ export default defineConfig({
         test: {
           name: 'use-case-tests',
           include: ['dist/test/modules/*/interactors/{commands,queries,reactions}/*/*.uc-test.js'],
-          globalSetup: ['./vitest.global-setup.ts'],
+          globalSetup: ['./vitest.databases.global-setup.ts'],
           setupFiles: ['./vitest.setup.ts'],
           env: {
             TEST_PROJECT: 'use-case-tests',
@@ -52,20 +52,14 @@ export default defineConfig({
         },
       },
       {
-        plugins: [NovadiUnplugin.vite({ enableAutowiring: true })],
         test: {
           name: 'e2e-tests',
-          env: {
-            TEST_PROJECT: 'e2e-tests',
-            NODE_OPTIONS: '--disable-warning=ExperimentalWarning',
-            E2E_BASE_URL: process.env['E2E_BASE_URL'] ?? `http://localhost:4000`,
-          },
-          include: ['src/transports/*/e2e/**/*.e2e-test.ts'],
-          environment: 'node',
+          include: ['dist/test/transports/*/e2e/**/*.e2e-test.js'],
+          globalSetup: ['./vitest.e2e.global-setup.ts'],
           setupFiles: ['./vitest.setup.ts'],
-          sequence: {
-            concurrent: false,
-          },
+          env: e2eVitestEnvironment,
+          mockReset: true,
+          fileParallelism: false,
         },
       },
     ],
