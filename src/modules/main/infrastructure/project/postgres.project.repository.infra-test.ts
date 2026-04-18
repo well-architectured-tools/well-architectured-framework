@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { PostgresProjectRepository } from './postgres.project.repository.js';
 import { diContainer } from '../../../../libs/dependency-injection/index.js';
 import type { PostgresService } from '../../../../libs/postgres/index.js';
@@ -8,8 +8,8 @@ import type { PostgresProjectPersistence } from './postgres.project.persistence.
 import { DateTime, UuidV7 } from '../../../../libs/ddd/index.js';
 
 describe('PostgresProjectRepository', (): void => {
-  let service: PostgresProjectRepository;
-  let postgresService: PostgresService;
+  const service: PostgresProjectRepository = diContainer.resolveType('PostgresProjectRepository');
+  const postgres: PostgresService = diContainer.resolveType('PostgresService');
 
   const project1: PostgresProjectPersistence = {
     id: '019d1165-f314-736f-8f26-364f5f05e5d7',
@@ -27,24 +27,19 @@ describe('PostgresProjectRepository', (): void => {
     created_at: new Date('2026-03-21T17:17:36.477Z'),
   };
 
-  beforeAll((): void => {
-    service = diContainer.resolveType('PostgresProjectRepository');
-    postgresService = diContainer.resolveType('PostgresService');
-  });
-
   afterAll(async (): Promise<void> => {
-    await postgresService.closeConnection();
+    await postgres.closeConnection();
   });
 
   beforeEach(async (): Promise<void> => {
-    await postgresService.query(`
+    await postgres.query(`
       TRUNCATE main.project RESTART IDENTITY CASCADE;
     `);
   });
 
   describe('getById', (): void => {
     it('should return a project when given a valid id', async (): Promise<void> => {
-      await postgresService.query(`
+      await postgres.query(`
         INSERT INTO main.project (id, name, created_at)
         VALUES
             ('${project1.id}', '${project1.name}', '${project1.created_at.toISOString()}'),
@@ -68,7 +63,7 @@ describe('PostgresProjectRepository', (): void => {
     });
 
     it('should throw DATA_VALIDATION_ERROR when database row schema is invalid', async (): Promise<void> => {
-      vi.spyOn(postgresService, 'query').mockResolvedValueOnce({
+      vi.spyOn(postgres, 'query').mockResolvedValueOnce({
         rows: [
           {
             id: project2.id,
@@ -151,7 +146,10 @@ describe('PostgresProjectRepository', (): void => {
     });
 
     it('should throw DATA_ERROR when transactional context provider is invalid', async (): Promise<void> => {
-      const result: Promise<void> = service.delete(UuidV7.create({ value: project3.id }), { provider: 'sqlite', transaction: {} });
+      const result: Promise<void> = service.delete(UuidV7.create({ value: project3.id }), {
+        provider: 'sqlite',
+        transaction: {},
+      });
 
       await expect(result).rejects.toBeInstanceOf(ApplicationError);
       await expect(result).rejects.toMatchObject({

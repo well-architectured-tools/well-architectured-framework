@@ -123,8 +123,20 @@ export default defineConfig(
           capture: ['moduleName'],
         },
         {
-          type: 'module',
-          pattern: 'src/modules/*/**/*.ts',
+          type: 'module-domain',
+          pattern: 'src/modules/*/domain/**/*.ts',
+          mode: 'full',
+          capture: ['moduleName'],
+        },
+        {
+          type: 'module-infrastructure',
+          pattern: 'src/modules/*/infrastructure/**/*.ts',
+          mode: 'full',
+          capture: ['moduleName'],
+        },
+        {
+          type: 'module-interactors',
+          pattern: 'src/modules/*/interactors/**/*.ts',
           mode: 'full',
           capture: ['moduleName'],
         },
@@ -163,8 +175,20 @@ export default defineConfig(
               allow: [['transport-index'], ['module-index']],
             },
             {
-              from: [['module']],
-              allow: [['module', { moduleName: '${from.moduleName}' }], ['lib-index']],
+              from: [['module-domain']],
+              allow: [['module-domain', { moduleName: '${from.moduleName}' }], ['lib-index']],
+            },
+            {
+              from: [['module-infrastructure']],
+              allow: [
+                ['module-infrastructure', { moduleName: '${from.moduleName}' }],
+                ['module-domain'],
+                ['lib-index'],
+              ],
+            },
+            {
+              from: [['module-interactors']],
+              allow: [['module-interactors', { moduleName: '${from.moduleName}' }], ['module-domain'], ['lib-index']],
             },
             {
               from: [['transport']],
