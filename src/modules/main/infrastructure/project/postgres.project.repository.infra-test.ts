@@ -3,7 +3,7 @@ import { PostgresProjectRepository } from './postgres.project.repository.js';
 import { diContainer } from '../../../../libs/dependency-injection/index.js';
 import type { PostgresService } from '../../../../libs/postgres/index.js';
 import { Project } from '../../domain/aggregates/project.aggregate.js';
-import { ApplicationError } from '../../../../libs/errors/index.js';
+import { ApplicationError } from '../../../../libs/kernel/index.js';
 import type { PostgresProjectPersistence } from './postgres.project.persistence.js';
 import { DateTime, UuidV7 } from '../../../../libs/ddd/index.js';
 

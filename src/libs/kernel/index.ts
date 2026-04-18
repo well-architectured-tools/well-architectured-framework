@@ -1,6 +1,11 @@
 export * from './handlers/event-handler.js';
 export * from './handlers/operation-handler.js';
 
+export * from './errors/application-error.js';
+export * from './errors/error-to-string-with-causes.js';
+export * from './errors/handle-data-error.js';
+export * from './errors/wrap-error-to-application-error-and-throw.js';
+
 export * from './helpers/generate-uuid-v4.js';
 export * from './helpers/generate-uuid-v7.js';
 export * from './helpers/get-env-var-or-throw.js';

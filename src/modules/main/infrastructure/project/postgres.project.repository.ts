@@ -1,12 +1,11 @@
 import type { ProjectRepository } from '../../interactors/shared/project/project.repository.js';
 import type { PostgresQueryResult, PostgresService } from '../../../../libs/postgres/index.js';
 import { UuidV7 } from '../../../../libs/ddd/index.js';
-import type { TransactionalContext } from '../../../../libs/kernel/index.js';
+import { handleDataError, type TransactionalContext } from '../../../../libs/kernel/index.js';
 import type { Project } from '../../domain/aggregates/project.aggregate.js';
 import { PostgresProjectPersistenceMapper } from './postgres.project.persistence-mapper.js';
 import type { PostgresProjectPersistence } from './postgres.project.persistence.js';
 import typia from 'typia';
-import { handleDataError } from '../../../../libs/errors/index.js';
 
 export class PostgresProjectRepository implements ProjectRepository {
   private readonly postgresService: PostgresService;

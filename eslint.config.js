@@ -179,16 +179,17 @@ export default defineConfig(
               allow: [['module-domain', { moduleName: '${from.moduleName}' }], ['lib-index']],
             },
             {
+              from: [['module-interactors']],
+              allow: [['module-interactors', { moduleName: '${from.moduleName}' }], ['module-domain'], ['lib-index']],
+            },
+            {
               from: [['module-infrastructure']],
               allow: [
                 ['module-infrastructure', { moduleName: '${from.moduleName}' }],
                 ['module-domain'],
+                ['module-interactors'],
                 ['lib-index'],
               ],
-            },
-            {
-              from: [['module-interactors']],
-              allow: [['module-interactors', { moduleName: '${from.moduleName}' }], ['module-domain'], ['lib-index']],
             },
             {
               from: [['transport']],

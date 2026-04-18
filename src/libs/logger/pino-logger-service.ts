@@ -1,6 +1,6 @@
 import pino from 'pino';
 import type { LoggerService } from './logger-service.js';
-import { ApplicationError, errorToStringWithCauses, type ApplicationErrorType } from '../errors/index.js';
+import { ApplicationError, errorToStringWithCauses, type ApplicationErrorType } from '../kernel/index.js';
 import type { EnvironmentService, EnvironmentVariables } from '../environment/index.js';
 
 export class PinoLoggerService implements LoggerService {

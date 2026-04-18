@@ -1,4 +1,4 @@
-import type { ApplicationErrorType } from '../../../libs/errors/index.js';
+import type { ApplicationErrorType } from '../../../libs/kernel/index.js';
 
 export interface FastifyErrorResponse {
   error: {

@@ -1,5 +1,5 @@
 import { ValueObject } from '../base/value-object.js';
-import { ApplicationError } from '../../errors/index.js';
+import { ApplicationError } from '../../kernel/index.js';
 import { isJsonString } from '../../kernel/index.js';
 
 interface Props {

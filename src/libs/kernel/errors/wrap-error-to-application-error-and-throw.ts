@@ -1,4 +1,4 @@
-import { ApplicationError, type ApplicationErrorOptions } from './index.js';
+import { ApplicationError, type ApplicationErrorOptions } from './application-error.js';
 
 export function wrapErrorToApplicationErrorAndThrow(error: unknown): never {
   if (error instanceof ApplicationError) {

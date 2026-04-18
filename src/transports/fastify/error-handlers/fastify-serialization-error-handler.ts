@@ -1,6 +1,6 @@
 import type { FastifyError, FastifyReply, FastifyRequest } from 'fastify';
 import type { FastifyErrorResponse } from '../responses/fastify-error-response.js';
-import { type ApplicationErrorType } from '../../../libs/errors/index.js';
+import { type ApplicationErrorType } from '../../../libs/kernel/index.js';
 import { getHttpStatusCodeByApplicationErrorType } from './get-http-status-code-by-application-error-type.js';
 import type { LoggerService } from '../../../libs/logger/index.js';
 import { diContainer } from '../../../libs/dependency-injection/index.js';

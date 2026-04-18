@@ -2,6 +2,7 @@
 
 ## TODO
 
+- in libs create service-2-service folder with, for example, users-to-main
 - e2e tests
 - move HttpClient to libs 
 - transaction outbox

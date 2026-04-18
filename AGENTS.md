@@ -6,7 +6,7 @@ This project is a **DDD + Clean Architecture** Node.js backend using TypeScript 
 
 ```
 src/
-  libs/          # Reusable library code (DDD primitives, kernel interfaces, postgres, logger, DI, errors, env)
+  libs/          # Reusable library code (DDD primitives, kernel interfaces/helpers/errors, postgres, logger, DI, env)
   modules/       # Feature modules (e.g. main) — each has domain/, infrastructure/, interactors/
   transports/    # Transport adapters (e.g. fastify) — controllers, e2e tests, error handlers
 ```
@@ -43,7 +43,7 @@ Always wrap the body in `unitOfWork.run()` and catch with `wrapErrorToApplicatio
 
 ## Error Handling
 
-- **`ApplicationError`** (`src/libs/errors/application-error.ts`) — typed errors with `type: 'NOT_FOUND' | 'VALIDATION' | 'UNEXPECTED'` and a `code` string (e.g. `'PROJECT_NOT_FOUND'`)
+- **`ApplicationError`** (`src/libs/kernel/errors/application-error.ts`) — typed errors with `type: 'NOT_FOUND' | 'VALIDATION' | 'UNEXPECTED'` and a `code` string (e.g. `'PROJECT_NOT_FOUND'`)
 - Use `wrapErrorToApplicationErrorAndThrow(error)` in handler catch blocks
 - Use `handleDataError(error)` when catching `typia` type-guard failures
 - Fastify error handler maps `ApplicationError.type` to HTTP status codes automatically
