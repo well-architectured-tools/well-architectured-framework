@@ -2,6 +2,7 @@
 
 ## TODO
 
+- e2e tests
 - move HttpClient to libs 
 - transaction outbox
 - idempotency

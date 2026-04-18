@@ -1,4 +1,4 @@
-import { afterAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { CreateProjectHandler } from './create-project.handler.js';
 import { diContainer } from '../../../../../libs/dependency-injection/index.js';
 import type { CreateProjectParams } from './create-project.params.js';
@@ -20,6 +20,9 @@ describe('CreateProjectHandler', (): void => {
   });
 
   it('should successfully create project', async (): Promise<void> => {
+    const currentTime: string = '2000-01-02T03:04:05.006Z';
+    vi.setSystemTime(currentTime);
+
     const params: CreateProjectParams = {
       name: 'Test Project',
     };
@@ -47,6 +50,6 @@ describe('CreateProjectHandler', (): void => {
       created_at: expect.any(Date),
     });
     expect(queryResult.rows[0]?.id).toBeUuidV7String();
-    // expect(queryResult.rows[0]?.created_at instanceof Date).toBe(true);
+    expect(queryResult.rows[0]?.created_at.toISOString()).toBe(currentTime);
   });
 });
