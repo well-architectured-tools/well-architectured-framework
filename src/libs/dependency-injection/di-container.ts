@@ -3,7 +3,7 @@ import { DotenvSafeEnvironmentService, SimpleEnvironmentService } from '../envir
 import { PinoLoggerService } from '../logger/index.js';
 import { PgPostgresService, PostgresUnitOfWork } from '../postgres/index.js';
 import { FastifyTransport } from '../../transports/fastify/index.js';
-import { CreateProjectHandler, PostgresProjectRepository } from '../../modules/main/index.js';
+import { CreateProjectHandler, PostgresProjectRepository } from '../../modules/enrich/index.js';
 
 // eslint-disable-next-line no-process-env
 const testProject: string | undefined = process.env['TEST_PROJECT'];

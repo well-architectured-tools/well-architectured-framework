@@ -33,14 +33,14 @@ describe('PostgresProjectRepository', (): void => {
 
   beforeEach(async (): Promise<void> => {
     await postgres.query(`
-      TRUNCATE main.project RESTART IDENTITY CASCADE;
+      TRUNCATE enrich.project RESTART IDENTITY CASCADE;
     `);
   });
 
   describe('getById', (): void => {
     it('should return a project when given a valid id', async (): Promise<void> => {
       await postgres.query(`
-        INSERT INTO main.project (id, name, created_at)
+        INSERT INTO enrich.project (id, name, created_at)
         VALUES
             ('${project1.id}', '${project1.name}', '${project1.created_at.toISOString()}'),
             ('${project2.id}', '${project2.name}', '${project2.created_at.toISOString()}'),

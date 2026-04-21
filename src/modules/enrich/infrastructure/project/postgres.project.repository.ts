@@ -19,7 +19,7 @@ export class PostgresProjectRepository implements ProjectRepository {
       const queryResult: PostgresQueryResult<PostgresProjectPersistence> = await this.postgresService.query(
         `
         SELECT id, name, created_at
-        FROM main.project
+        FROM enrich.project
         WHERE id = $1;
       `,
         [id.value],
@@ -44,7 +44,7 @@ export class PostgresProjectRepository implements ProjectRepository {
     try {
       await this.postgresService.query(
         `
-          INSERT INTO main.project (id, name, created_at)
+          INSERT INTO enrich.project (id, name, created_at)
           VALUES ($1, $2, $3);
         `,
         [project.id.value, project.name, project.createdAt.iso],
@@ -59,7 +59,7 @@ export class PostgresProjectRepository implements ProjectRepository {
     try {
       await this.postgresService.query(
         `
-          DELETE FROM main.project
+          DELETE FROM enrich.project
           WHERE id = $1;
         `,
         [id.value],

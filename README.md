@@ -2,6 +2,7 @@
 
 ## TODO
 
+- загрузка файлов S3
 - in libs create service-2-service folder with, for example, users-to-main
 - transaction outbox
 - idempotency

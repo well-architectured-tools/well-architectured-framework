@@ -11,11 +11,11 @@ import {
   type CreateProjectDto,
   CreateProjectHandler,
   type CreateProjectParams,
-} from '../../../../modules/main/index.js';
+} from '../../../../modules/enrich/index.js';
 
 export default (server: FastifyInstance): void => {
   const method: Lowercase<_HTTPMethods> = 'post';
-  const path: string = '/main/create-project';
+  const path: string = '/enrich/create-project';
   const successResponseCode: number = 200;
 
   const handlerName: string = 'CreateProjectHandler';

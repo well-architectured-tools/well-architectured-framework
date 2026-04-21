@@ -15,7 +15,7 @@ describe('CreateProjectHandler', (): void => {
 
   beforeEach(async (): Promise<void> => {
     await postgres.query(`
-      TRUNCATE main.project RESTART IDENTITY CASCADE;
+      TRUNCATE enrich.project RESTART IDENTITY CASCADE;
     `);
   });
 
@@ -38,7 +38,7 @@ describe('CreateProjectHandler', (): void => {
     const queryResult: PostgresQueryResult<{ id: string; name: string; created_at: Date }> = await postgres.query(
       `
         SELECT id, name, created_at
-        FROM main.project
+        FROM enrich.project
         WHERE id = $1;
       `,
       [result.id],
