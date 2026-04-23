@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitest/config';
-import { e2eVitestEnvironment } from './vitest.e2e.environment.js';
+import { e2eEnvironment } from './vitest.e2e.environment.js';
 
 export default defineConfig({
   test: {
@@ -57,7 +57,10 @@ export default defineConfig({
           include: ['dist/test/transports/*/e2e/**/*.e2e-test.js'],
           globalSetup: ['./vitest.e2e.global-setup.ts'],
           setupFiles: ['./vitest.setup.ts'],
-          env: e2eVitestEnvironment,
+          env: {
+            TEST_PROJECT: 'e2e-tests',
+            ...e2eEnvironment,
+          },
           mockReset: true,
           fileParallelism: false,
         },
