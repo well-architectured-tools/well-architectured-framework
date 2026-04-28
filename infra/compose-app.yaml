@@ -10,6 +10,10 @@ services:
       LOG_LEVEL: '${LOG_LEVEL}'
       PORT: '${PORT}'
       POSTGRES_URL: '${POSTGRES_URL}'
+      VALKEY_HOST: '${VALKEY_HOST}'
+      VALKEY_PORT: '${VALKEY_PORT}'
+      VALKEY_USER: '${VALKEY_USER}'
+      VALKEY_PASSWORD: '${VALKEY_PASSWORD}'
     depends_on:
       postgres:
         condition: service_healthy

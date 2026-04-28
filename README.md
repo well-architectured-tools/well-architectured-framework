@@ -2,6 +2,7 @@
 
 ## TODO
 
+- добавить куда то версию апки в хелсчек например
 - health check endpoint valkey + disconnect and service https://glide.valkey.io/getting-started/quickstart/?lang=node
 - загрузка файлов S3
 - transaction outbox

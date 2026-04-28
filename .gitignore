@@ -1,5 +1,6 @@
 .idea
 .env
+.semantic-release-version
 dist
 node_modules
 npm-debug.log
