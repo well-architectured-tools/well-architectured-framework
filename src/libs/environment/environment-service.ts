@@ -1,7 +1,7 @@
 export interface EnvironmentVariables {
   readonly LOAD_DOTENV: boolean;
   readonly NODE_ENV: 'production' | 'development' | 'test';
-  readonly LOG_LEVEL: 'info' | 'warn' | 'error';
+  readonly LOG_LEVEL: 'info' | 'warn' | 'error' | 'silent';
   readonly PORT: number;
   readonly POSTGRES_URL: string;
   readonly VALKEY_HOST: string;

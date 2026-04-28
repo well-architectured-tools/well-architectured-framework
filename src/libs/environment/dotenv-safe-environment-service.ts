@@ -46,7 +46,7 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
 
   private getLogLevel(): EnvironmentVariables['LOG_LEVEL'] {
     const logLevel: string | undefined = process.env['LOG_LEVEL'];
-    const allowedLogLevels: EnvironmentVariables['LOG_LEVEL'][] = ['info', 'warn', 'error'];
+    const allowedLogLevels: EnvironmentVariables['LOG_LEVEL'][] = ['info', 'warn', 'error', 'silent'];
     if (logLevel === undefined || !allowedLogLevels.includes(logLevel as EnvironmentVariables['LOG_LEVEL'])) {
       throw new Error('Invalid Environment Variable: LOG_LEVEL');
     }
