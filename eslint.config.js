@@ -161,43 +161,91 @@ export default defineConfig(
     },
     rules: {
       ...boundaries.configs.strict.rules,
-      'boundaries/element-types': [
-        2,
+      'boundaries/element-types': 'off',
+      'boundaries/dependencies': [
+        'error',
         {
           default: 'disallow',
           rules: [
             {
-              from: [['lib']],
-              allow: [['lib', { libName: '${from.libName}' }], ['lib-index']],
+              from: { type: 'lib' },
+              allow: {
+                to: [{ type: 'lib', captured: { libName: '{{ from.captured.libName }}' } }, { type: 'lib-index' }],
+              },
             },
             {
-              from: [['lib', { libName: 'dependency-injection' }]],
-              allow: [['transport-index'], ['module-index']],
+              from: { type: 'lib-index' },
+              allow: {
+                to: { type: 'lib', captured: { libName: '{{ from.captured.libName }}' } },
+              },
             },
             {
-              from: [['module-domain']],
-              allow: [['module-domain', { moduleName: '${from.moduleName}' }], ['lib-index']],
+              from: { type: 'lib', captured: { libName: 'dependency-injection' } },
+              allow: {
+                to: { type: ['transport-index', 'module-index'] },
+              },
             },
             {
-              from: [['module-interactors']],
-              allow: [['module-interactors', { moduleName: '${from.moduleName}' }], ['module-domain'], ['lib-index']],
+              from: { type: 'module-domain' },
+              allow: {
+                to: [
+                  { type: 'module-domain', captured: { moduleName: '{{ from.captured.moduleName }}' } },
+                  { type: 'lib-index' },
+                ],
+              },
             },
             {
-              from: [['module-infrastructure']],
-              allow: [
-                ['module-infrastructure', { moduleName: '${from.moduleName}' }],
-                ['module-domain'],
-                ['module-interactors'],
-                ['lib-index'],
-              ],
+              from: { type: 'module-interactors' },
+              allow: {
+                to: [
+                  { type: 'module-interactors', captured: { moduleName: '{{ from.captured.moduleName }}' } },
+                  { type: 'module-domain' },
+                  { type: 'lib-index' },
+                ],
+              },
             },
             {
-              from: [['transport']],
-              allow: [['transport', { transportName: '${from.transportName}' }], ['lib-index'], ['module-index']],
+              from: { type: 'module-infrastructure' },
+              allow: {
+                to: [
+                  { type: 'module-infrastructure', captured: { moduleName: '{{ from.captured.moduleName }}' } },
+                  { type: 'module-domain' },
+                  { type: 'module-interactors' },
+                  { type: 'lib-index' },
+                ],
+              },
             },
             {
-              from: [['index']],
-              allow: [['lib-index']],
+              from: { type: 'module-index' },
+              allow: {
+                to: [
+                  { type: 'module-domain', captured: { moduleName: '{{ from.captured.moduleName }}' } },
+                  { type: 'module-infrastructure', captured: { moduleName: '{{ from.captured.moduleName }}' } },
+                  { type: 'module-interactors', captured: { moduleName: '{{ from.captured.moduleName }}' } },
+                ],
+              },
+            },
+            {
+              from: { type: 'transport' },
+              allow: {
+                to: [
+                  { type: 'transport', captured: { transportName: '{{ from.captured.transportName }}' } },
+                  { type: 'lib-index' },
+                  { type: 'module-index' },
+                ],
+              },
+            },
+            {
+              from: { type: 'transport-index' },
+              allow: {
+                to: { type: 'transport', captured: { transportName: '{{ from.captured.transportName }}' } },
+              },
+            },
+            {
+              from: { type: 'index' },
+              allow: {
+                to: { type: 'lib-index' },
+              },
             },
           ],
         },

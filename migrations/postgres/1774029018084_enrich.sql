@@ -19,4 +19,3 @@ CREATE TABLE enrich.catalog
 );
 
 CREATE INDEX idx_catalog_project_id ON enrich.catalog (project_id);
-
