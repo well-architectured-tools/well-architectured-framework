@@ -16,6 +16,10 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
       LOG_LEVEL: this.getLogLevel(),
       PORT: this.getPort(),
       POSTGRES_URL: this.getPostgresUrl(),
+      VALKEY_HOST: this.getValkeyHost(),
+      VALKEY_PORT: this.getValkeyPort(),
+      VALKEY_USER: this.getValkeyUser(),
+      VALKEY_PASSWORD: this.getValkeyPassword(),
     };
   }
 
@@ -63,5 +67,37 @@ export class DotenvSafeEnvironmentService implements EnvironmentService {
       throw new Error('Invalid Environment Variable: POSTGRES_URL');
     }
     return postgresUrl;
+  }
+
+  private getValkeyHost(): EnvironmentVariables['VALKEY_HOST'] {
+    const valkeyHost: string | undefined = process.env['VALKEY_HOST'];
+    if (valkeyHost === undefined) {
+      throw new Error('Invalid Environment Variable: VALKEY_HOST');
+    }
+    return valkeyHost;
+  }
+
+  private getValkeyPort(): EnvironmentVariables['VALKEY_PORT'] {
+    const valkeyPort: number = Number.parseInt(process.env['VALKEY_PORT'] ?? '', 10);
+    if (Number.isNaN(valkeyPort) || valkeyPort < 1 || valkeyPort > 65_535) {
+      throw new Error('Invalid Environment Variable: VALKEY_PORT');
+    }
+    return valkeyPort;
+  }
+
+  private getValkeyUser(): EnvironmentVariables['VALKEY_USER'] {
+    const valkeyUser: string | undefined = process.env['VALKEY_USER'];
+    if (valkeyUser === undefined) {
+      throw new Error('Invalid Environment Variable: VALKEY_USER');
+    }
+    return valkeyUser;
+  }
+
+  private getValkeyPassword(): EnvironmentVariables['VALKEY_PASSWORD'] {
+    const valkeyPassword: string | undefined = process.env['VALKEY_PASSWORD'];
+    if (valkeyPassword === undefined) {
+      throw new Error('Invalid Environment Variable: VALKEY_PASSWORD');
+    }
+    return valkeyPassword;
   }
 }

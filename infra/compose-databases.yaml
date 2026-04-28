@@ -1,4 +1,4 @@
-name: waf-databases
+name: waf
 services:
   postgres:
     image: postgres:18
@@ -13,7 +13,7 @@ services:
       PGDATA: '/var/lib/postgresql/18/docker'
       POSTGRES_INITDB_ARGS: '--auth-host=scram-sha-256 --auth-local=scram-sha-256'
     ports:
-      - "${POSTGRES_PORT:-5555}:5432"
+      - "${INFRA_POSTGRES_PORT:-5555}:5432"
     command: ["postgres", "-c", "config_file=/config/postgresql.conf"]
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -h 127.0.0.1 || exit 1']
@@ -32,5 +32,37 @@ services:
       postgres:
         condition: service_healthy
     command: ['npm', 'run', 'pg-migrations:up']
+  valkey:
+    image: valkey/valkey:8
+    volumes:
+      - valkey-storage:/data
+    environment:
+      VALKEY_USERNAME: 'admin'
+      VALKEY_PASSWORD: 'admin'
+    ports:
+      - "${INFRA_VALKEY_PORT:-6666}:6379"
+    command:
+      - valkey-server
+      - --appendonly
+      - 'yes'
+      - --appendfsync
+      - everysec
+      - --user
+      - default
+      - 'off'
+      - --user
+      - admin
+      - 'on'
+      - '>admin'
+      - '~*'
+      - '&*'
+      - '+@all'
+    healthcheck:
+      test: ['CMD-SHELL', 'valkey-cli --no-auth-warning --user "$$VALKEY_USERNAME" --pass "$$VALKEY_PASSWORD" ping']
+      interval: 2s
+      timeout: 2s
+      retries: 30
+      start_period: 2s
 volumes:
   postgres-storage:
+  valkey-storage:

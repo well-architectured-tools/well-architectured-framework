@@ -8,9 +8,11 @@ let environment: StartedDockerComposeEnvironment | undefined;
 
 export async function setup(): Promise<void> {
   environment = await new DockerComposeEnvironment(infraPath, [composeDatabasesFile])
-    .withEnvironment({ POSTGRES_PORT: '5556' })
+    .withEnvironment({ INFRA_POSTGRES_PORT: '5556' })
     .withWaitStrategy('postgres-1', Wait.forHealthCheck())
     .withWaitStrategy('postgres-migrations-1', Wait.forOneShotStartup().withStartupTimeout(60_000))
+    .withEnvironment({ INFRA_VALKEY_PORT: '6667' })
+    .withWaitStrategy('valkey-1', Wait.forHealthCheck())
     .withStartupTimeout(300_000)
     .up();
 }

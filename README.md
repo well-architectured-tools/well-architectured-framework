@@ -2,6 +2,7 @@
 
 ## TODO
 
+- health check endpoint valkey + disconnect and service https://glide.valkey.io/getting-started/quickstart/?lang=node
 - загрузка файлов S3
 - in libs create service-2-service folder with, for example, users-to-main
 - transaction outbox

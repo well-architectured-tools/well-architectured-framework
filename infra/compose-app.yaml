@@ -1,3 +1,4 @@
+name: waf
 services:
   app:
     build:
